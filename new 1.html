@@ -1,0 +1,2954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>College Quiz App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #83a4d4, #b6fbff);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .quiz-container {
+      background: pink;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.2);
+      max-width: 500px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    #question {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    #options {
+      list-style: none;
+      padding: 0;
+    }
+
+    #options li {
+      margin: 10px 0;
+      padding: 12px;
+      background-color: #ececec;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    #options li:hover {
+      background-color: #d4edfa;
+    }
+
+    #nextBtn {
+      margin-top: 20px;
+      padding: 10px 30px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #nextBtn:hover {
+      background-color: #43a047;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #4e342e;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>🧠 Mind test </h1>
+    
+    <div id="quiz-box">
+      <div id="question">Loading question...</div>
+      <ul id="options"></ul>
+      <button id="nextBtn">Next</button>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "What is the capital of India?",
+        options: ["Mumbai", "Delhi", "Kolkata", "Chennai"],
+        answer: "Delhi"
+      },
+      {
+        question: "Which language is used for web apps?",
+        options: ["Python", "Java", "HTML", "C++"],
+        answer: "HTML"
+      },
+      {
+        question: "Which company developed Windows?",
+        options: ["Google", "Apple", "Microsoft", "IBM"],
+        answer: "Microsoft"
+      },
+	{
+    question: "Which data structure uses FIFO (First In First Out)?",
+    options: ["Stack", "Queue", "Tree", "Graph"],
+    answer: "Queue"
+  },
+  {
+    question: "Which of the following is not a programming language?",
+    options: ["Python", "HTML", "Java", "C++"],
+    answer: "HTML"
+  },
+  {
+    question: "Who is known as the father of the computer?",
+    options: ["Charles Babbage", "Alan Turing", "Dennis Ritchie", "Bill Gates"],
+    answer: "Charles Babbage"
+  },
+  {
+    question: "Which one is the fastest memory?",
+    options: ["Cache", "RAM", "Hard Disk", "ROM"],
+    answer: "Cache"
+  },
+  {
+    question: "Which of the following is a DBMS?",
+    options: ["MySQL", "Photoshop", "PowerPoint", "Visual Studio"],
+    answer: "MySQL"
+  },
+  {
+    question: "Which language is used to develop Android Apps?",
+    options: ["C#", "Swift", "Kotlin", "Ruby"],
+    answer: "Kotlin"
+  },
+  {
+    question: "What does CPU stand for?",
+    options: ["Central Process Unit", "Central Processing Unit", "Control Process Unit", "Central Program Unit"],
+    answer: "Central Processing Unit"
+  },
+  {
+    question: "Which one is not an input device?",
+    options: ["Mouse", "Keyboard", "Monitor", "Scanner"],
+    answer: "Monitor"
+  },
+  {
+    question: "Which file extension indicates a compressed archive?",
+    options: [".zip", ".exe", ".html", ".txt"],
+    answer: ".zip"
+  },
+  {
+    question: "What does HTML stand for?",
+    options: ["Hyper Text Markup Language", "High Text Machine Language", "Hyperlinks and Text Markup Language", "None of these"],
+    answer: "Hyper Text Markup Language"
+  },
+  {
+    question: "Which operating system is open-source?",
+    options: ["Windows", "macOS", "Linux", "iOS"],
+    answer: "Linux"
+  },
+  {
+    question: "What does RAM stand for?",
+    options: ["Random Access Memory", "Read Access Memory", "Run Access Memory", "Random Allocation Memory"],
+    answer: "Random Access Memory"
+  },
+  {
+    question: "Which protocol is used for secure web browsing?",
+    options: ["HTTP", "HTTPS", "FTP", "SMTP"],
+    answer: "HTTPS"
+  },
+  {
+    question: "Which device connects a computer to a network?",
+    options: ["Router", "Printer", "Scanner", "Monitor"],
+    answer: "Router"
+  },
+  {
+    question: "Which programming language is best for AI?",
+    options: ["Python", "Java", "C", "PHP"],
+    answer: "Python"
+  },
+  {
+    question: "Which company developed the Windows OS?",
+    options: ["Apple", "Microsoft", "Google", "IBM"],
+    answer: "Microsoft"
+  },
+  {
+    question: "Which of these is a NoSQL database?",
+    options: ["MongoDB", "Oracle", "MySQL", "PostgreSQL"],
+    answer: "MongoDB"
+  },
+  {
+    question: "What does GUI stand for?",
+    options: ["General User Interface", "Graphical User Interface", "Graphical Universal Interface", "General Utility Interface"],
+    answer: "Graphical User Interface"
+  },
+  {
+    question: "Which one is a markup language?",
+    options: ["Python", "CSS", "HTML", "C++"],
+    answer: "HTML"
+  },
+  {
+    question: "What is the full form of URL?",
+    options: ["Uniform Resource Locator", "Universal Resource Link", "Uniform Reference Link", "Universal Reference Locator"],
+    answer: "Uniform Resource Locator"
+  },
+  {
+    question: "Which of the following is an email protocol?",
+    options: ["HTTP", "FTP", "SMTP", "TCP"],
+    answer: "SMTP"
+  },
+  {
+    question: "Which company developed the Java language?",
+    options: ["Microsoft", "Sun Microsystems", "IBM", "Apple"],
+    answer: "Sun Microsystems"
+  },
+  {
+    question: "Which device is used to project computer screen onto wall?",
+    options: ["Scanner", "Monitor", "Projector", "Printer"],
+    answer: "Projector"
+  },
+  {
+    question: "Which of the following is not an operating system?",
+    options: ["Windows", "Linux", "Oracle", "Ubuntu"],
+    answer: "Oracle"
+  },
+  {
+    question: "Which is the brain of the computer?",
+    options: ["RAM", "Hard Disk", "CPU", "Motherboard"],
+    answer: "CPU"
+  },
+  {
+    question: "What does IP stand for in networking?",
+    options: ["Internet Protocol", "Internal Protocol", "Interconnect Process", "Internet Processing"],
+    answer: "Internet Protocol"
+  },
+  {
+    question: "Which port does HTTP use by default?",
+    options: ["80", "21", "110", "25"],
+    answer: "80"
+  },
+  {
+    question: "Which computer virus spreads through a network?",
+    options: ["Trojan", "Worm", "Spyware", "Adware"],
+    answer: "Worm"
+  },
+  {
+    question: "What is the function of DNS?",
+    options: ["Translate domain names to IP", "Secure websites", "Send emails", "Encrypt data"],
+    answer: "Translate domain names to IP"
+  },
+  {
+    question: "Which key is used to refresh a web page?",
+    options: ["F2", "F5", "F4", "F12"],
+    answer: "F5"
+  },
+  {
+    question: "Which storage is non-volatile?",
+    options: ["RAM", "Cache", "Hard Disk", "Registers"],
+    answer: "Hard Disk"
+  },
+  {
+    question: "Which of the following is used to design web pages?",
+    options: ["Python", "C", "HTML", "SQL"],
+    answer: "HTML"
+  },
+  {
+    question: "Which OS is mainly used in Apple computers?",
+    options: ["Linux", "macOS", "Windows", "DOS"],
+    answer: "macOS"
+  },
+  {
+    question: "Which one is not a type of software?",
+    options: ["System", "Application", "Utility", "Scanner"],
+    answer: "Scanner"
+  },
+  {
+    question: "Which of these is a type of ROM?",
+    options: ["DRAM", "PROM", "SRAM", "DDR4"],
+    answer: "PROM"
+  },
+  {
+    question: "Which HTML tag is used for links?",
+    options: ["<link>", "<a>", "<href>", "<url>"],
+    answer: "<a>"
+  },
+  {
+    question: "Which is not a type of computer network?",
+    options: ["LAN", "WAN", "PAN", "SAN", "MAN"],
+    answer: "SAN"
+  },
+  {
+    question: "Which programming language is interpreted?",
+    options: ["C", "C++", "Python", "Java"],
+    answer: "Python"
+  },
+  {
+    question: "What does BIOS stand for?",
+    options: ["Basic Input Output System", "Binary Integrated Operating System", "Basic Internet Operating System", "Built-in Operating System"],
+    answer: "Basic Input Output System"
+  },
+  {
+    question: "Which HTML element is used for a line break?",
+    options: ["<p>", "<br>", "<hr>", "<line>"],
+    answer: "<br>"
+  },
+  {
+    question: "Which device helps connect different networks?",
+    options: ["Switch", "Router", "Hub", "Repeater"],
+    answer: "Router"
+  },
+  {
+    question: "What is the main function of an OS?",
+    options: ["Game development", "Manage hardware and software", "Web browsing", "Programming"],
+    answer: "Manage hardware and software"
+  },
+  {
+    question: "What does PDF stand for?",
+    options: ["Portable Document Format", "Printable Document Format", "Program Data File", "Page Data Format"],
+    answer: "Portable Document Format"
+  },
+  {
+    question: "Which one is used to style HTML pages?",
+    options: ["JS", "CSS", "SQL", "Python"],
+    answer: "CSS"
+  },
+  {
+    question: "What is phishing?",
+    options: ["Fishing software", "Email fraud", "Hardware hacking", "Game programming"],
+    answer: "Email fraud"
+  },
+  {
+    question: "Which command is used to list files in Linux?",
+    options: ["dir", "ls", "list", "show"],
+    answer: "ls"
+  },
+  {
+    question: "Which is not a web browser?",
+    options: ["Firefox", "Chrome", "Edge", "Linux"],
+    answer: "Linux"
+  },
+  {
+    question: "What is open-source software?",
+    options: ["Paid software", "Proprietary software", "Free to use and modify", "Licensed only"],
+    answer: "Free to use and modify"
+  },
+  {
+    question: "Which of the following is used for Cyber Security?",
+    options: ["Firewall", "Compiler", "Printer", "Scanner"],
+    answer: "Firewall"
+  },
+  {
+    question: "Which key combination is used to paste?",
+    options: ["Ctrl + C", "Ctrl + P", "Ctrl + V", "Ctrl + X"],
+    answer: "Ctrl + V"
+  },
+  {
+    question: "Which one is an example of system software?",
+    options: ["MS Word", "Windows 10", "Tally", "Photoshop"],
+    answer: "Windows 10"
+  },
+  {
+    question: "Which file format is used for videos?",
+    options: [".mp4", ".docx", ".xlsx", ".pptx"],
+    answer: ".mp4"
+  },
+  {
+    question: "What does LAN stand for?",
+    options: ["Local Area Network", "Large Area Network", "Long Area Network", "Linked Access Node"],
+    answer: "Local Area Network"
+  },
+  {
+    question: "Which device is used to digitize drawings?",
+    options: ["Plotter", "Printer", "Scanner", "Digitizer"],
+    answer: "Digitizer"
+  },
+  {
+    question: "Which component stores the BIOS?",
+    options: ["RAM", "ROM", "CPU", "Hard Disk"],
+    answer: "ROM"
+  },
+  {
+    question: "Which tag is used to insert an image in HTML?",
+    options: ["<pic>", "<image>", "<img>", "<src>"],
+    answer: "<img>"
+  },
+  {
+    question: "Which storage device is most portable?",
+    options: ["Hard Disk", "Pen Drive", "CD", "Blu-ray"],
+    answer: "Pen Drive"
+  },
+  {
+    question: "Which one is a cloud storage platform?",
+    options: ["Google Drive", "USB", "SSD", "BIOS"],
+    answer: "Google Drive"
+  },
+  {
+    question: "What is used to uniquely identify devices on the internet?",
+    options: ["MAC Address", "IP Address", "Domain Name", "URL"],
+    answer: "IP Address"
+  },
+  {
+    question: "Which protocol is used for file transfer?",
+    options: ["HTTP", "FTP", "SMTP", "DNS"],
+    answer: "FTP"
+  },
+  {
+    question: "Which type of malware demands payment?",
+    options: ["Worm", "Adware", "Ransomware", "Trojan"],
+    answer: "Ransomware"
+  },
+  {
+    question: "Which computer part connects all other parts?",
+    options: ["CPU", "Motherboard", "RAM", "Hard Disk"],
+    answer: "Motherboard"
+  },
+  {
+    question: "Which one is not an output device?",
+    options: ["Monitor", "Speaker", "Printer", "Mouse"],
+    answer: "Mouse"
+  },
+  {
+    question: "Which technology enables contactless payments?",
+    options: ["Bluetooth", "NFC", "Wi-Fi", "QR"],
+    answer: "NFC"
+  },
+  {
+    question: "Which is the main circuit board in a computer?",
+    options: ["CPU", "Motherboard", "SMPS", "RAM"],
+    answer: "Motherboard"
+  },
+  {
+    question: "Which language is used to style HTML pages?",
+    options: ["Java", "C", "CSS", "PHP"],
+    answer: "CSS"
+  },
+  {
+    question: "Which part of the computer performs calculations?",
+    options: ["Monitor", "RAM", "CPU", "ROM"],
+    answer: "CPU"
+  },
+  {
+    question: "What is the shortcut to undo an action?",
+    options: ["Ctrl + Y", "Ctrl + Z", "Ctrl + A", "Ctrl + X"],
+    answer: "Ctrl + Z"
+  },
+  {
+    question: "Which of the following is a mobile OS?",
+    options: ["Windows", "Linux", "Android", "macOS"],
+    answer: "Android"
+  },
+  {
+    question: "What is the function of an IP address?",
+    options: ["Identify printer", "Locate websites", "Identify computers on a network", "Speed up computer"],
+    answer: "Identify computers on a network"
+  },
+  {
+    question: "Which key is used to delete characters right of cursor?",
+    options: ["Backspace", "Shift", "Delete", "Enter"],
+    answer: "Delete"
+  },
+  {
+    question: "Which of these is not a programming language?",
+    options: ["Ruby", "JavaScript", "Python", "Google"],
+    answer: "Google"
+  },
+  {
+    question: "Which one is used in AI & Machine Learning?",
+    options: ["Excel", "Photoshop", "Python", "Access"],
+    answer: "Python"
+  },
+  {
+    question: "Which language runs in the browser?",
+    options: ["Python", "Java", "JavaScript", "C"],
+    answer: "JavaScript"
+  },
+  {
+    question: "Which device is needed for internet access?",
+    options: ["Keyboard", "Router", "Scanner", "Printer"],
+    answer: "Router"
+  },
+  {
+    question: "Which of these stores more data?",
+    options: ["Floppy Disk", "DVD", "CD", "Hard Disk"],
+    answer: "Hard Disk"
+  },
+  {
+    question: "What does SEO stand for?",
+    options: ["Search Engine Optimization", "System Error Operation", "Secure Email Option", "Simple Encryption Output"],
+    answer: "Search Engine Optimization"
+  },
+  {
+    question: "Which of these is used for software development?",
+    options: ["Compiler", "Speaker", "Scanner", "Router"],
+    answer: "Compiler"
+  },
+  {
+    question: "Which of these is not a database language?",
+    options: ["SQL", "PL/SQL", "HTML", "T-SQL"],
+    answer: "HTML"
+  },
+  {
+    question: "Which company owns Android OS?",
+    options: ["Microsoft", "Apple", "Google", "IBM"],
+    answer: "Google"
+  },
+  {
+    question: "What does API stand for?",
+    options: ["Application Programming Interface", "Automatic Program Integration", "Applied Programming Instruction", "Advanced Protocol Interface"],
+    answer: "Application Programming Interface"
+  },
+  {
+    question: "What is the binary equivalent of decimal 10?",
+    options: ["1010", "1001", "1100", "1111"],
+    answer: "1010"
+  },
+  {
+    question: "Which language is platform-independent?",
+    options: ["C", "C++", "Java", "Assembly"],
+    answer: "Java"
+  },
+  {
+    question: "What is used to protect computers from viruses?",
+    options: ["Firewall", "Antivirus", "Compiler", "Cache"],
+    answer: "Antivirus"
+  },
+  {
+    question: "Which of these is not a valid domain?",
+    options: [".com", ".org", ".net", ".html"],
+    answer: ".html"
+  },
+  {
+    question: "What is the smallest unit of data in a computer?",
+    options: ["Bit", "Byte", "Word", "Nybble"],
+    answer: "Bit"
+  },
+  {
+    question: "Which device displays output?",
+    options: ["Monitor", "Keyboard", "Mouse", "Microphone"],
+    answer: "Monitor"
+  },
+  {
+    question: "Which one is a search engine?",
+    options: ["Facebook", "Chrome", "Google", "Gmail"],
+    answer: "Google"
+  },
+  {
+    question: "What does ISP stand for?",
+    options: ["Internet Service Provider", "Internal Storage Protocol", "Internet Secure Platform", "Integrated Software Panel"],
+    answer: "Internet Service Provider"
+  },
+  {
+    question: "What is multitasking?",
+    options: ["Running many programs at once", "Deleting files", "Downloading apps", "Using more RAM"],
+    answer: "Running many programs at once"
+  },
+  {
+    question: "What is cloud computing?",
+    options: ["Rain sensor tech", "Online file sharing and processing", "Offline apps", "Windows backup"],
+    answer: "Online file sharing and processing"
+  },
+  {
+    question: "Which of these is a spreadsheet program?",
+    options: ["MS Word", "MS Excel", "PowerPoint", "Paint"],
+    answer: "MS Excel"
+  },
+  {
+    question: "Which shortcut opens a new tab in browser?",
+    options: ["Ctrl + N", "Ctrl + T", "Ctrl + W", "Ctrl + X"],
+    answer: "Ctrl + T"
+  },
+  {
+    question: "What does GUI mean?",
+    options: ["Graphics User Interface", "Graphical User Interface", "General Use Interface", "Graph User Input"],
+    answer: "Graphical User Interface"
+  },
+  {
+    question: "Which software shows slides?",
+    options: ["MS Excel", "Photoshop", "MS PowerPoint", "WordPad"],
+    answer: "MS PowerPoint"
+  },
+  {
+    question: "Which of these is a programming paradigm?",
+    options: ["Object-Oriented", "Linear", "Modular", "Compiler"],
+    answer: "Object-Oriented"
+  },
+  {
+    question: "Which layer in OSI handles routing?",
+    options: ["Data Link", "Network", "Transport", "Session"],
+    answer: "Network"
+  },
+  {
+    question: "Which of these is NOT an email provider?",
+    options: ["Yahoo", "Gmail", "Outlook", "Google Drive"],
+    answer: "Google Drive"
+  },
+
+  {
+    question: "Who is the first President of India?",
+    options: ["Jawaharlal Nehru", "Dr. Rajendra Prasad", "Sarvepalli Radhakrishnan", "APJ Abdul Kalam"],
+    answer: "Dr. Rajendra Prasad"
+  },
+  {
+    question: "Which river is known as the Ganga of the South?",
+    options: ["Godavari", "Kaveri", "Krishna", "Tungabhadra"],
+    answer: "Godavari"
+  },
+  {
+    question: "Who wrote the National Anthem of India?",
+    options: ["Bankim Chandra Chatterjee", "Rabindranath Tagore", "Sarojini Naidu", "Subhash Chandra Bose"],
+    answer: "Rabindranath Tagore"
+  },
+  {
+    question: "Which planet is known as the Red Planet?",
+    options: ["Mars", "Venus", "Jupiter", "Saturn"],
+    answer: "Mars"
+  },
+  {
+    question: "Who was the first female Prime Minister of India?",
+    options: ["Indira Gandhi", "Sarojini Naidu", "Sushma Swaraj", "Pratibha Patil"],
+    answer: "Indira Gandhi"
+  },
+  {
+    question: "In which year did India gain independence?",
+    options: ["1945", "1947", "1950", "1952"],
+    answer: "1947"
+  },
+  {
+    question: "What is the capital of Australia?",
+    options: ["Sydney", "Melbourne", "Canberra", "Perth"],
+    answer: "Canberra"
+  },
+  {
+    question: "Which gas is most abundant in Earth's atmosphere?",
+    options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+    answer: "Nitrogen"
+  },
+  {
+    question: "Who invented the light bulb?",
+    options: ["Isaac Newton", "Thomas Edison", "Benjamin Franklin", "Nikola Tesla"],
+    answer: "Thomas Edison"
+  },
+  {
+    question: "Which is the longest river in the world?",
+    options: ["Amazon", "Nile", "Yangtze", "Ganges"],
+    answer: "Nile"
+  },
+  {
+    question: "Who is known as the Iron Man of India?",
+    options: ["Subhash Chandra Bose", "Sardar Vallabhbhai Patel", "Bhagat Singh", "Lal Bahadur Shastri"],
+    answer: "Sardar Vallabhbhai Patel"
+  },
+  {
+    question: "Which city is known as the Pink City?",
+    options: ["Delhi", "Jaipur", "Jodhpur", "Agra"],
+    answer: "Jaipur"
+  },
+  {
+    question: "Who was the first man to walk on the Moon?",
+    options: ["Neil Armstrong", "Buzz Aldrin", "Yuri Gagarin", "Michael Collins"],
+    answer: "Neil Armstrong"
+  },
+  {
+    question: "Which is the national animal of India?",
+    options: ["Lion", "Elephant", "Tiger", "Leopard"],
+    answer: "Tiger"
+  },
+  {
+    question: "Where is the headquarters of the United Nations?",
+    options: ["Geneva", "New York", "Paris", "London"],
+    answer: "New York"
+  },
+  {
+    question: "Which is the largest desert in the world?",
+    options: ["Gobi", "Sahara", "Thar", "Kalahari"],
+    answer: "Sahara"
+  },
+  {
+    question: "Who discovered penicillin?",
+    options: ["Marie Curie", "Alexander Fleming", "Louis Pasteur", "Albert Einstein"],
+    answer: "Alexander Fleming"
+  },
+  {
+    question: "Which element has the chemical symbol 'O'?",
+    options: ["Oxygen", "Osmium", "Oxide", "Orion"],
+    answer: "Oxygen"
+  },
+  {
+    question: "What is the currency of Japan?",
+    options: ["Yuan", "Won", "Yen", "Ringgit"],
+    answer: "Yen"
+  },
+  {
+    question: "What is the full form of GDP?",
+    options: ["Gross Domestic Product", "General Duty Police", "Growth Development Plan", "Global Data Point"],
+    answer: "Gross Domestic Product"
+  },
+  {
+    question: "Which country gifted the Statue of Liberty to the USA?",
+    options: ["Germany", "Canada", "France", "Italy"],
+    answer: "France"
+  },
+  {
+    question: "In which continent is the Sahara Desert located?",
+    options: ["Asia", "Africa", "Australia", "South America"],
+    answer: "Africa"
+  },
+  {
+    question: "Who is the author of 'Discovery of India'?",
+    options: ["Mahatma Gandhi", "Subhash Chandra Bose", "Jawaharlal Nehru", "Dr. Ambedkar"],
+    answer: "Jawaharlal Nehru"
+  },
+  {
+    question: "Where is the Taj Mahal located?",
+    options: ["Delhi", "Agra", "Jaipur", "Hyderabad"],
+    answer: "Agra"
+  },
+  {
+    question: "Which Indian city is known as the City of Joy?",
+    options: ["Mumbai", "Kolkata", "Chennai", "Bengaluru"],
+    answer: "Kolkata"
+  },
+  {
+    question: "What is the capital of Canada?",
+    options: ["Toronto", "Ottawa", "Vancouver", "Montreal"],
+    answer: "Ottawa"
+  },
+  {
+    question: "Which organ purifies blood in the human body?",
+    options: ["Lungs", "Liver", "Heart", "Kidney"],
+    answer: "Kidney"
+  },
+  {
+    question: "What is the largest planet in the Solar System?",
+    options: ["Earth", "Saturn", "Jupiter", "Neptune"],
+    answer: "Jupiter"
+  },
+  {
+    question: "Who is the current Chief Election Commissioner of India (2024)?",
+    options: ["Rajiv Kumar", "Sushil Chandra", "Sunil Arora", "T.N. Seshan"],
+    answer: "Rajiv Kumar"
+  },
+  {
+    question: "Who is the first Indian woman to win an Olympic medal?",
+    options: ["P.T. Usha", "Karnam Malleswari", "Mary Kom", "Saina Nehwal"],
+    answer: "Karnam Malleswari"
+  },
+  {
+    question: "What is the national flower of India?",
+    options: ["Rose", "Lily", "Marigold", "Lotus"],
+    answer: "Lotus"
+  },
+  {
+    question: "What does ISRO stand for?",
+    options: ["Indian Space Research Organisation", "International Space Radio Organization", "Indian Science Rocket Organization", "Indian Space Robotic Operation"],
+    answer: "Indian Space Research Organisation"
+  },
+  {
+    question: "Who was the first Governor-General of independent India?",
+    options: ["C. Rajagopalachari", "Lord Mountbatten", "Lord Canning", "Warren Hastings"],
+    answer: "Lord Mountbatten"
+  },
+  {
+    question: "In which year was the Constitution of India adopted?",
+    options: ["1947", "1948", "1950", "1949"],
+    answer: "1949"
+  },
+  {
+    question: "Which Indian state has the longest coastline?",
+    options: ["Tamil Nadu", "Kerala", "Gujarat", "Andhra Pradesh"],
+    answer: "Gujarat"
+  },
+  {
+    question: "Which is the highest civilian award in India?",
+    options: ["Padma Shri", "Padma Bhushan", "Padma Vibhushan", "Bharat Ratna"],
+    answer: "Bharat Ratna"
+  },
+  {
+    question: "Which city is called the Silicon Valley of India?",
+    options: ["Mumbai", "Hyderabad", "Pune", "Bengaluru"],
+    answer: "Bengaluru"
+  },
+  {
+    question: "Which metal is liquid at room temperature?",
+    options: ["Gold", "Iron", "Mercury", "Copper"],
+    answer: "Mercury"
+  },
+  {
+    question: "Which is the smallest continent?",
+    options: ["Europe", "Australia", "Antarctica", "South America"],
+    answer: "Australia"
+  },
+  {
+    question: "Which Indian state is known as 'God's Own Country'?",
+    options: ["Goa", "Kerala", "Assam", "Sikkim"],
+    answer: "Kerala"
+  },
+  {
+    question: "Who invented the telephone?",
+    options: ["Thomas Edison", "Graham Bell", "James Watt", "Michael Faraday"],
+    answer: "Graham Bell"
+  },
+  {
+    question: "Which Indian sportsperson is known as the Flying Sikh?",
+    options: ["Milkha Singh", "Abhinav Bindra", "Kapil Dev", "Dhanraj Pillai"],
+    answer: "Milkha Singh"
+  },
+  {
+    question: "Which is the national tree of India?",
+    options: ["Neem", "Mango", "Banyan", "Peepal"],
+    answer: "Banyan"
+  },
+  {
+    question: "Which article of the Indian Constitution deals with Fundamental Rights?",
+    options: ["Article 12–35", "Article 1–11", "Article 36–50", "Article 51A"],
+    answer: "Article 12–35"
+  },
+  {
+    question: "Who was the first Indian to win Nobel Prize?",
+    options: ["C.V. Raman", "Mother Teresa", "Rabindranath Tagore", "Kailash Satyarthi"],
+    answer: "Rabindranath Tagore"
+  },
+  {
+    question: "Which is the oldest mountain range in India?",
+    options: ["Himalayas", "Vindhyas", "Aravalli", "Satpura"],
+    answer: "Aravalli"
+  },
+  {
+    question: "Which part of the brain controls breathing?",
+    options: ["Cerebrum", "Medulla", "Cerebellum", "Hypothalamus"],
+    answer: "Medulla"
+  },
+  {
+    question: "Which organ controls all activities in the human body?",
+    options: ["Heart", "Liver", "Brain", "Spinal Cord"],
+    answer: "Brain"
+  },
+  {
+    question: "Which planet has the most moons?",
+    options: ["Jupiter", "Saturn", "Uranus", "Neptune"],
+    answer: "Saturn"
+  },
+  {
+    question: "Who is known as the Missile Man of India?",
+    options: ["Dr. Homi Bhabha", "Dr. Kalam", "Dr. Vikram Sarabhai", "Dr. C.V. Raman"],
+    answer: "Dr. Kalam"
+  },
+  {
+    question: "Which festival is also known as the Festival of Lights?",
+    options: ["Holi", "Dussehra", "Diwali", "Navratri"],
+    answer: "Diwali"
+  },
+  {
+    question: "Which vitamin is produced when skin is exposed to sunlight?",
+    options: ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin B12"],
+    answer: "Vitamin D"
+  },
+  {
+    question: "Which is the smallest bone in the human body?",
+    options: ["Femur", "Stapes", "Ulna", "Tibia"],
+    answer: "Stapes"
+  },
+  {
+    question: "Which Indian city is called the City of Lakes?",
+    options: ["Udaipur", "Bhopal", "Srinagar", "Nainital"],
+    answer: "Udaipur"
+  },
+  {
+    question: "Where is the Gateway of India located?",
+    options: ["Delhi", "Kolkata", "Mumbai", "Goa"],
+    answer: "Mumbai"
+  },
+  {
+    question: "Which Mughal emperor built the Red Fort?",
+    options: ["Akbar", "Babur", "Shah Jahan", "Aurangzeb"],
+    answer: "Shah Jahan"
+  },
+  {
+    question: "Which Indian state is the largest by area?",
+    options: ["Madhya Pradesh", "Uttar Pradesh", "Rajasthan", "Maharashtra"],
+    answer: "Rajasthan"
+  },
+  {
+    question: "Which country is known as the Land of the Rising Sun?",
+    options: ["China", "India", "Thailand", "Japan"],
+    answer: "Japan"
+  },
+  {
+    question: "Who invented the zero?",
+    options: ["Aryabhata", "Bhaskara", "Euclid", "Pythagoras"],
+    answer: "Aryabhata"
+  },
+  {
+    question: "Which Indian freedom fighter founded Azad Hind Fauj?",
+    options: ["Bhagat Singh", "Mahatma Gandhi", "Subhash Chandra Bose", "Jawaharlal Nehru"],
+    answer: "Subhash Chandra Bose"
+  },
+  {
+    question: "Which is the only continent without a desert?",
+    options: ["Europe", "Asia", "Australia", "South America"],
+    answer: "Europe"
+  },
+  {
+    question: "Which mountain is the highest in the world?",
+    options: ["K2", "Kangchenjunga", "Everest", "Makalu"],
+    answer: "Everest"
+  },
+  {
+    question: "Which state is famous for Bihu dance?",
+    options: ["Assam", "Kerala", "Punjab", "Odisha"],
+    answer: "Assam"
+  },
+  {
+    question: "What is the currency of China?",
+    options: ["Yen", "Ruble", "Yuan", "Won"],
+    answer: "Yuan"
+  },
+  {
+    question: "What is the scientific name of humans?",
+    options: ["Homo erectus", "Homo sapiens", "Australopithecus", "Neanderthal"],
+    answer: "Homo sapiens"
+  },
+  {
+    question: "Which place is known for the Sun Temple?",
+    options: ["Konark", "Khajuraho", "Ellora", "Mahabalipuram"],
+    answer: "Konark"
+  },
+  {
+    question: "Who was the first Indian woman in space?",
+    options: ["Kalpana Chawla", "Sunita Williams", "Ritu Karidhal", "Tessy Thomas"],
+    answer: "Kalpana Chawla"
+  },
+  {
+    question: "Which fruit is the largest in size?",
+    options: ["Watermelon", "Jackfruit", "Pumpkin", "Mango"],
+    answer: "Jackfruit"
+  },
+  {
+    question: "Which part of the body has the smallest bones?",
+    options: ["Ear", "Toe", "Finger", "Nose"],
+    answer: "Ear"
+  },
+  {
+    question: "Which Indian festival is known for colors?",
+    options: ["Diwali", "Eid", "Holi", "Raksha Bandhan"],
+    answer: "Holi"
+  },
+  {
+    question: "Where is Mount Everest located?",
+    options: ["India", "China", "Nepal", "Bhutan"],
+    answer: "Nepal"
+  },
+  {
+    question: "Which state is the Sunderbans forest located in?",
+    options: ["Odisha", "Assam", "West Bengal", "Jharkhand"],
+    answer: "West Bengal"
+  },
+  {
+    question: "Who discovered gravity?",
+    options: ["Einstein", "Newton", "Kepler", "Galileo"],
+    answer: "Newton"
+  },
+  {
+    question: "Which Indian state is famous for Kathakali dance?",
+    options: ["Tamil Nadu", "Kerala", "Odisha", "Maharashtra"],
+    answer: "Kerala"
+  },
+  {
+    question: "Which scientist developed the theory of relativity?",
+    options: ["Newton", "Einstein", "Faraday", "Tesla"],
+    answer: "Einstein"
+  },
+  {
+    question: "Which lake is the largest in India?",
+    options: ["Wular Lake", "Chilka Lake", "Dal Lake", "Pichola Lake"],
+    answer: "Chilka Lake"
+  },
+  {
+    question: "What is the study of weather called?",
+    options: ["Meteorology", "Geology", "Biology", "Ecology"],
+    answer: "Meteorology"
+  },
+  {
+    question: "Which award is given for literature in India?",
+    options: ["Bharat Ratna", "Padma Shri", "Jnanpith", "Dadasaheb Phalke"],
+    answer: "Jnanpith"
+  },
+  {
+    question: "Which city is known as the 'Tea Capital of India'?",
+    options: ["Darjeeling", "Guwahati", "Dibrugarh", "Shillong"],
+    answer: "Dibrugarh"
+  },
+  {
+    question: "Which planet is closest to the Sun?",
+    options: ["Venus", "Mercury", "Earth", "Mars"],
+    answer: "Mercury"
+  },
+  {
+    question: "Which was the first satellite sent by India?",
+    options: ["Chandrayaan-1", "INSAT", "Aryabhata", "Rohini"],
+    answer: "Aryabhata"
+  },
+  {
+    question: "Which is the smallest ocean in the world?",
+    options: ["Indian", "Atlantic", "Pacific", "Arctic"],
+    answer: "Arctic"
+  },
+  {
+    question: "Which part of the plant conducts photosynthesis?",
+    options: ["Stem", "Root", "Leaf", "Flower"],
+    answer: "Leaf"
+  },
+  {
+    question: "Who founded the Indian National Congress?",
+    options: ["Mahatma Gandhi", "A.O. Hume", "Dadabhai Naoroji", "Jawaharlal Nehru"],
+    answer: "A.O. Hume"
+  },
+  {
+    question: "What is the national sport of India?",
+    options: ["Cricket", "Kabaddi", "Hockey", "Football"],
+    answer: "Hockey"
+  },
+  {
+    question: "Which Indian state shares the longest border with Bangladesh?",
+    options: ["Assam", "Tripura", "West Bengal", "Meghalaya"],
+    answer: "West Bengal"
+  },
+  {
+    question: "Who is the author of Mahabharata?",
+    options: ["Valmiki", "Tulsidas", "Ved Vyas", "Kalidasa"],
+    answer: "Ved Vyas"
+  },
+  {
+    question: "Who designed the Indian National Flag?",
+    options: ["Bhagat Singh", "Pingali Venkayya", "Subhash Chandra Bose", "Lala Lajpat Rai"],
+    answer: "Pingali Venkayya"
+  },
+  {
+    question: "Which is the national aquatic animal of India?",
+    options: ["Dolphin", "Turtle", "Crocodile", "Shark"],
+    answer: "Dolphin"
+  },
+  {
+    question: "Which city is called the Financial Capital of India?",
+    options: ["Delhi", "Mumbai", "Bengaluru", "Ahmedabad"],
+    answer: "Mumbai"
+  },
+  {
+    question: "What is the capital of Russia?",
+    options: ["Kiev", "Warsaw", "Moscow", "Helsinki"],
+    answer: "Moscow"
+  },
+  {
+    question: "Who was the first woman president of India?",
+    options: ["Sarojini Naidu", "Indira Gandhi", "Pratibha Patil", "Meira Kumar"],
+    answer: "Pratibha Patil"
+  },
+  {
+    question: "Which festival marks the new year in Punjab?",
+    options: ["Holi", "Diwali", "Baisakhi", "Lohri"],
+    answer: "Baisakhi"
+  },
+  {
+    question: "Which Mughal emperor built the Taj Mahal?",
+    options: ["Babur", "Akbar", "Shah Jahan", "Aurangzeb"],
+    answer: "Shah Jahan"
+  },
+  {
+    question: "Which river flows through the city of Varanasi?",
+    options: ["Yamuna", "Brahmaputra", "Godavari", "Ganga"],
+    answer: "Ganga"
+  },
+  {
+    question: "Which Nobel Prize category was started in 1969?",
+    options: ["Peace", "Literature", "Economics", "Chemistry"],
+    answer: "Economics"
+  },
+  {
+    question: "Which vitamin helps in blood clotting?",
+    options: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin K"],
+    answer: "Vitamin K"
+  },
+  {
+    question: "Which is the longest wall in the world?",
+    options: ["The Great Wall of China", "Berlin Wall", "Western Wall", "Hadrian’s Wall"],
+    answer: "The Great Wall of China"
+  },
+  {
+    question: "Which continent has the most countries?",
+    options: ["Asia", "Europe", "Africa", "South America"],
+    answer: "Africa"
+  },
+  {
+    question: "What is the powerhouse of the cell?",
+    options: ["Nucleus", "Mitochondria", "Ribosome", "Chloroplast"],
+    answer: "Mitochondria"
+  },
+  {
+    question: "Which acid is found in lemon?",
+    options: ["Acetic acid", "Sulfuric acid", "Citric acid", "Nitric acid"],
+    answer: "Citric acid"
+  },
+  {
+    question: "What is the SI unit of force?",
+    options: ["Joule", "Pascal", "Newton", "Watt"],
+    answer: "Newton"
+  },
+  {
+    question: "Who discovered gravity?",
+    options: ["Einstein", "Newton", "Galileo", "Faraday"],
+    answer: "Newton"
+  },
+  {
+    question: "What is the chemical symbol for Sodium?",
+    options: ["S", "Na", "So", "Sd"],
+    answer: "Na"
+  },
+  {
+    question: "What is the boiling point of water at sea level?",
+    options: ["90°C", "100°C", "80°C", "110°C"],
+    answer: "100°C"
+  },
+  {
+    question: "Which gas is essential for respiration?",
+    options: ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
+    answer: "Oxygen"
+  },
+  {
+    question: "Which planet is known as the Earth's twin?",
+    options: ["Venus", "Mars", "Mercury", "Jupiter"],
+    answer: "Venus"
+  },
+  {
+    question: "Which organ purifies blood in the human body?",
+    options: ["Liver", "Lungs", "Kidney", "Heart"],
+    answer: "Kidney"
+  },
+  {
+    question: "Which part of the plant conducts photosynthesis?",
+    options: ["Stem", "Root", "Leaf", "Flower"],
+    answer: "Leaf"
+  },
+  {
+    question: "Which blood group is called universal donor?",
+    options: ["O+", "O–", "AB+", "AB–"],
+    answer: "O–"
+  },
+  {
+    question: "Who discovered Penicillin?",
+    options: ["Louis Pasteur", "Alexander Fleming", "Isaac Newton", "Marie Curie"],
+    answer: "Alexander Fleming"
+  },
+  {
+    question: "What is the basic unit of heredity?",
+    options: ["Chromosome", "DNA", "Gene", "Protein"],
+    answer: "Gene"
+  },
+  {
+    question: "Which element is most abundant in the Earth's crust?",
+    options: ["Oxygen", "Iron", "Aluminium", "Silicon"],
+    answer: "Oxygen"
+  },
+  {
+    question: "Which organ produces insulin?",
+    options: ["Liver", "Pancreas", "Kidney", "Heart"],
+    answer: "Pancreas"
+  },
+  {
+    question: "What is the pH of pure water?",
+    options: ["5", "6", "7", "8"],
+    answer: "7"
+  },
+  {
+    question: "Which vitamin is synthesized by the human body using sunlight?",
+    options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"],
+    answer: "Vitamin D"
+  },
+  {
+    question: "What is the atomic number of carbon?",
+    options: ["6", "12", "8", "4"],
+    answer: "6"
+  },
+  {
+    question: "Which law explains the relationship between pressure and volume of gases?",
+    options: ["Ohm's Law", "Boyle's Law", "Newton's Law", "Faraday's Law"],
+    answer: "Boyle's Law"
+  },
+  {
+    question: "Which part of the brain controls balance?",
+    options: ["Cerebrum", "Medulla", "Cerebellum", "Thalamus"],
+    answer: "Cerebellum"
+  },
+  {
+    question: "Which gas turns lime water milky?",
+    options: ["Hydrogen", "Nitrogen", "Carbon dioxide", "Oxygen"],
+    answer: "Carbon dioxide"
+  },
+  {
+    question: "What is the speed of light in vacuum?",
+    options: ["3 × 10^8 m/s", "1.5 × 10^6 m/s", "3 × 10^6 m/s", "1 × 10^8 m/s"],
+    answer: "3 × 10^8 m/s"
+  },
+  {
+    question: "Which metal is liquid at room temperature?",
+    options: ["Gold", "Mercury", "Aluminium", "Iron"],
+    answer: "Mercury"
+  },
+  {
+    question: "Which is the hardest natural substance?",
+    options: ["Iron", "Diamond", "Graphite", "Quartz"],
+    answer: "Diamond"
+  },
+  {
+    question: "Which instrument is used to measure temperature?",
+    options: ["Barometer", "Thermometer", "Hygrometer", "Ammeter"],
+    answer: "Thermometer"
+  },
+  {
+    question: "What is the chemical formula of common salt?",
+    options: ["KCl", "NaCl", "CaCl2", "MgCl2"],
+    answer: "NaCl"
+  },
+  {
+    question: "What is the normal human body temperature?",
+    options: ["35°C", "36.5°C", "37°C", "38°C"],
+    answer: "37°C"
+  },
+  {
+    question: "Which vitamin is responsible for blood clotting?",
+    options: ["Vitamin A", "Vitamin B", "Vitamin K", "Vitamin D"],
+    answer: "Vitamin K"
+  },
+  {
+    question: "What is the unit of electrical resistance?",
+    options: ["Watt", "Volt", "Ohm", "Ampere"],
+    answer: "Ohm"
+  },
+  {
+    question: "Which planet has the strongest gravity?",
+    options: ["Saturn", "Earth", "Jupiter", "Mars"],
+    answer: "Jupiter"
+  },
+  {
+    question: "Which scientist proposed the theory of relativity?",
+    options: ["Newton", "Galileo", "Einstein", "Faraday"],
+    answer: "Einstein"
+  },
+  {
+    question: "Which gas is used for filling balloons?",
+    options: ["Hydrogen", "Oxygen", "Carbon Dioxide", "Helium"],
+    answer: "Helium"
+  },
+  {
+    question: "Which part of the eye controls the amount of light entering?",
+    options: ["Cornea", "Retina", "Pupil", "Iris"],
+    answer: "Iris"
+  },
+  {
+    question: "Which element has the highest melting point?",
+    options: ["Iron", "Platinum", "Tungsten", "Gold"],
+    answer: "Tungsten"
+  },
+  {
+    question: "What is the study of fungi called?",
+    options: ["Zoology", "Mycology", "Botany", "Virology"],
+    answer: "Mycology"
+  },
+  {
+    question: "Which blood cells help in clotting?",
+    options: ["Red cells", "White cells", "Platelets", "Plasma"],
+    answer: "Platelets"
+  },
+  {
+    question: "Which layer protects Earth from UV radiation?",
+    options: ["Stratosphere", "Troposphere", "Ozone layer", "Ionosphere"],
+    answer: "Ozone layer"
+  },
+  {
+    question: "What is the largest organ of the human body?",
+    options: ["Heart", "Liver", "Skin", "Lungs"],
+    answer: "Skin"
+  },
+  {
+    question: "Which type of lens is used in a magnifying glass?",
+    options: ["Concave", "Convex", "Plano-concave", "Cylindrical"],
+    answer: "Convex"
+  },
+  {
+    question: "What causes tides on Earth?",
+    options: ["Sun", "Winds", "Moon", "Earth's rotation"],
+    answer: "Moon"
+  },
+  {
+    question: "Which is the largest bone in the human body?",
+    options: ["Humerus", "Femur", "Tibia", "Skull"],
+    answer: "Femur"
+  },
+  {
+    question: "Which device converts sound into electrical signals?",
+    options: ["Speaker", "Microphone", "Amplifier", "Radio"],
+    answer: "Microphone"
+  },
+  {
+    question: "What is the unit of frequency?",
+    options: ["Ohm", "Watt", "Hertz", "Volt"],
+    answer: "Hertz"
+  },
+  {
+    question: "Which blood group is universal recipient?",
+    options: ["A", "B", "O", "AB"],
+    answer: "AB"
+  },
+  {
+    question: "Which metal is used in thermometers?",
+    options: ["Aluminium", "Copper", "Mercury", "Lead"],
+    answer: "Mercury"
+  },
+  {
+    question: "What is the main gas found in LPG?",
+    options: ["Methane", "Ethane", "Butane", "Propane"],
+    answer: "Butane"
+  },
+  {
+    question: "Which vitamin deficiency causes night blindness?",
+    options: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"],
+    answer: "Vitamin A"
+  },
+  {
+    question: "Which organ is affected by jaundice?",
+    options: ["Liver", "Heart", "Kidney", "Lungs"],
+    answer: "Liver"
+  },
+  {
+    question: "What is the name of the outermost layer of Earth?",
+    options: ["Core", "Mantle", "Crust", "Lithosphere"],
+    answer: "Crust"
+  },
+  {
+    question: "Which part of cell contains genetic material?",
+    options: ["Nucleus", "Ribosome", "Cytoplasm", "Mitochondria"],
+    answer: "Nucleus"
+  },
+  {
+    question: "Which blood cells fight infection?",
+    options: ["Red Blood Cells", "Platelets", "Plasma", "White Blood Cells"],
+    answer: "White Blood Cells"
+  },
+  {
+    question: "What is the main function of red blood cells?",
+    options: ["Fight infection", "Carry oxygen", "Clot blood", "Produce antibodies"],
+    answer: "Carry oxygen"
+  },
+  {
+    question: "Which organ controls all body activities?",
+    options: ["Heart", "Lungs", "Brain", "Liver"],
+    answer: "Brain"
+  },
+  {
+    question: "Which part of the cell controls all activities?",
+    options: ["Cytoplasm", "Cell wall", "Nucleus", "Mitochondria"],
+    answer: "Nucleus"
+  },
+  {
+    question: "Which gland is known as the master gland?",
+    options: ["Thyroid", "Pituitary", "Adrenal", "Pancreas"],
+    answer: "Pituitary"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Speed", "Mass", "Distance", "Velocity"],
+    answer: "Velocity"
+  },
+  {
+    question: "What is the center of an atom called?",
+    options: ["Electron", "Proton", "Neutron", "Nucleus"],
+    answer: "Nucleus"
+  },
+  {
+    question: "Which gas is known as laughing gas?",
+    options: ["Nitrogen", "Nitrous Oxide", "Carbon Dioxide", "Sulphur Dioxide"],
+    answer: "Nitrous Oxide"
+  },
+  {
+    question: "Which instrument is used to measure atmospheric pressure?",
+    options: ["Thermometer", "Barometer", "Hygrometer", "Altimeter"],
+    answer: "Barometer"
+  },
+  {
+    question: "Which part of the human brain controls heartbeat and breathing?",
+    options: ["Cerebellum", "Cerebrum", "Medulla", "Thalamus"],
+    answer: "Medulla"
+  },
+  {
+    question: "Which vitamin helps in calcium absorption?",
+    options: ["Vitamin A", "Vitamin D", "Vitamin E", "Vitamin C"],
+    answer: "Vitamin D"
+  },
+  {
+    question: "Which organ produces bile?",
+    options: ["Stomach", "Liver", "Pancreas", "Gallbladder"],
+    answer: "Liver"
+  },
+  {
+    question: "What is the outermost planet in the solar system?",
+    options: ["Saturn", "Neptune", "Uranus", "Jupiter"],
+    answer: "Neptune"
+  },
+  {
+    question: "Which element is needed for the formation of hemoglobin?",
+    options: ["Calcium", "Iron", "Zinc", "Iodine"],
+    answer: "Iron"
+  },
+  {
+    question: "What is the chemical formula of glucose?",
+    options: ["C6H6", "C6H12O6", "CH4", "C2H6O"],
+    answer: "C6H12O6"
+  },
+  {
+    question: "Which of these is NOT a renewable energy source?",
+    options: ["Solar", "Wind", "Coal", "Hydro"],
+    answer: "Coal"
+  },
+  {
+    question: "Which disease is caused by the deficiency of iodine?",
+    options: ["Scurvy", "Goitre", "Rickets", "Anemia"],
+    answer: "Goitre"
+  },
+  {
+    question: "Which process converts water vapor into liquid?",
+    options: ["Evaporation", "Condensation", "Sublimation", "Melting"],
+    answer: "Condensation"
+  },
+  {
+    question: "Which is the smallest planet in the solar system?",
+    options: ["Venus", "Mars", "Mercury", "Pluto"],
+    answer: "Mercury"
+  },
+  {
+    question: "Which metal is used in making aircrafts?",
+    options: ["Iron", "Aluminium", "Lead", "Zinc"],
+    answer: "Aluminium"
+  },
+  {
+    question: "Which part of the ear helps maintain balance?",
+    options: ["Outer Ear", "Middle Ear", "Inner Ear", "Eardrum"],
+    answer: "Inner Ear"
+  },
+  {
+    question: "Which layer of the Earth is made of molten rock?",
+    options: ["Crust", "Mantle", "Core", "Lithosphere"],
+    answer: "Mantle"
+  },
+  {
+    question: "What is the study of the environment called?",
+    options: ["Ecology", "Zoology", "Botany", "Geology"],
+    answer: "Ecology"
+  },
+  {
+    question: "Which of the following is a chemical change?",
+    options: ["Melting ice", "Boiling water", "Burning paper", "Freezing juice"],
+    answer: "Burning paper"
+  },
+  {
+    question: "Which blood group is called universal recipient?",
+    options: ["A+", "B+", "AB+", "O–"],
+    answer: "AB+"
+  },
+  {
+    question: "Which non-metal is liquid at room temperature?",
+    options: ["Chlorine", "Bromine", "Fluorine", "Carbon"],
+    answer: "Bromine"
+  },
+  {
+    question: "Which planet has a day longer than its year?",
+    options: ["Mercury", "Venus", "Mars", "Saturn"],
+    answer: "Venus"
+  },
+  {
+    question: "Which gland regulates metabolism?",
+    options: ["Adrenal", "Pituitary", "Thyroid", "Pancreas"],
+    answer: "Thyroid"
+  },
+  {
+    question: "What is the normal pH of human blood?",
+    options: ["6.5", "7.4", "8.2", "7.9"],
+    answer: "7.4"
+  },
+  {
+    question: "Which planet is famous for its rings?",
+    options: ["Jupiter", "Uranus", "Neptune", "Saturn"],
+    answer: "Saturn"
+  },
+  {
+    question: "Which element is used in thermometers?",
+    options: ["Lead", "Aluminium", "Mercury", "Zinc"],
+    answer: "Mercury"
+  },
+  {
+    question: "What is the function of white blood cells?",
+    options: ["Clotting", "Transporting oxygen", "Fighting infection", "Carrying waste"],
+    answer: "Fighting infection"
+  },
+  {
+    question: "Which part of the brain is responsible for intelligence?",
+    options: ["Cerebellum", "Medulla", "Cerebrum", "Hypothalamus"],
+    answer: "Cerebrum"
+  },
+  {
+    question: "Which element is essential for photosynthesis?",
+    options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+    answer: "Carbon Dioxide"
+  },
+  {
+    question: "Which instrument is used to measure blood pressure?",
+    options: ["Stethoscope", "Sphygmomanometer", "Thermometer", "Barometer"],
+    answer: "Sphygmomanometer"
+  },
+  {
+    question: "Which bone protects the brain?",
+    options: ["Femur", "Rib", "Skull", "Spine"],
+    answer: "Skull"
+  },
+  {
+    question: "Which gas is released by plants during photosynthesis?",
+    options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Methane"],
+    answer: "Oxygen"
+  },
+  {
+    question: "Which blood vessel carries oxygenated blood from lungs to heart?",
+    options: ["Pulmonary artery", "Aorta", "Vena cava", "Pulmonary vein"],
+    answer: "Pulmonary vein"
+  },
+  {
+    question: "Which layer of the atmosphere contains the ozone layer?",
+    options: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"],
+    answer: "Stratosphere"
+  },
+  {
+    question: "Which cell organelle is responsible for digestion?",
+    options: ["Ribosome", "Lysosome", "Mitochondria", "Chloroplast"],
+    answer: "Lysosome"
+  },
+  {
+    question: "Which energy transformation occurs in a solar panel?",
+    options: ["Mechanical to electrical", "Chemical to electrical", "Solar to electrical", "Heat to mechanical"],
+    answer: "Solar to electrical"
+  },
+  {
+    question: "What is the function of the liver?",
+    options: ["Filter urine", "Produce bile", "Pump blood", "Control breathing"],
+    answer: "Produce bile"
+  },
+  {
+    question: "Which element is most abundant in the human body?",
+    options: ["Calcium", "Iron", "Carbon", "Oxygen"],
+    answer: "Oxygen"
+  },
+  {
+    question: "Which part of the human ear helps in hearing?",
+    options: ["Eardrum", "Semicircular canals", "Cochlea", "Auditory nerve"],
+    answer: "Cochlea"
+  },
+  {
+    question: "What is the study of stars and planets called?",
+    options: ["Geology", "Astronomy", "Astrology", "Ecology"],
+    answer: "Astronomy"
+  },
+  {
+    question: "Which scientist discovered electrons?",
+    options: ["Rutherford", "Thomson", "Bohr", "Chadwick"],
+    answer: "Thomson"
+  },
+  {
+    question: "What is the main function of the large intestine?",
+    options: ["Digestion", "Absorption of water", "Storage of bile", "Absorption of nutrients"],
+    answer: "Absorption of water"
+  },
+  {
+    question: "What is the lightest element in the periodic table?",
+    options: ["Hydrogen", "Helium", "Lithium", "Oxygen"],
+    answer: "Hydrogen"
+  },
+  {
+    question: "What is the chemical name of table salt?",
+    options: ["Sodium bicarbonate", "Sodium chloride", "Potassium chloride", "Calcium carbonate"],
+    answer: "Sodium chloride"
+  },
+
+  {
+    question: "Who was the first President of independent India?",
+    options: ["Dr. Rajendra Prasad", "Jawaharlal Nehru", "Sardar Patel", "Dr. Ambedkar"],
+    answer: "Dr. Rajendra Prasad"
+  },
+  {
+    question: "Which is the largest continent in the world?",
+    options: ["Africa", "Asia", "Europe", "Australia"],
+    answer: "Asia"
+  },
+  {
+    question: "Who wrote the Constitution of India?",
+    options: ["Rajendra Prasad", "Jawaharlal Nehru", "Dr. B.R. Ambedkar", "Sardar Patel"],
+    answer: "Dr. B.R. Ambedkar"
+  },
+  {
+    question: "In which year did India get independence?",
+    options: ["1945", "1946", "1947", "1948"],
+    answer: "1947"
+  },
+  {
+    question: "Which river is known as the Ganga of the South?",
+    options: ["Cauvery", "Krishna", "Godavari", "Narmada"],
+    answer: "Godavari"
+  },
+  {
+    question: "Who was the first Prime Minister of India?",
+    options: ["Lal Bahadur Shastri", "Jawaharlal Nehru", "Indira Gandhi", "Rajiv Gandhi"],
+    answer: "Jawaharlal Nehru"
+  },
+  {
+    question: "What is the capital of Rajasthan?",
+    options: ["Jodhpur", "Jaipur", "Udaipur", "Ajmer"],
+    answer: "Jaipur"
+  },
+  {
+    question: "When was the Constitution of India adopted?",
+    options: ["26 January 1950", "15 August 1947", "26 November 1949", "2 October 1947"],
+    answer: "26 November 1949"
+  },
+  {
+    question: "Which is the longest river in India?",
+    options: ["Yamuna", "Brahmaputra", "Ganga", "Godavari"],
+    answer: "Ganga"
+  },
+  {
+    question: "Who was known as the Iron Man of India?",
+    options: ["Subhash Chandra Bose", "Dr. Ambedkar", "Sardar Patel", "Rajendra Prasad"],
+    answer: "Sardar Patel"
+  },
+  {
+    question: "Which is the highest mountain peak in India?",
+    options: ["Mount Everest", "Kanchenjunga", "Nanda Devi", "Annapurna"],
+    answer: "Kanchenjunga"
+  },
+  {
+    question: "Who was the founder of the Maurya Empire?",
+    options: ["Chandragupta Maurya", "Ashoka", "Bindusara", "Bimbisara"],
+    answer: "Chandragupta Maurya"
+  },
+  {
+    question: "How many states are there in India?",
+    options: ["28", "29", "30", "31"],
+    answer: "28"
+  },
+  {
+    question: "Who was the last Governor-General of independent India?",
+    options: ["Rajagopalachari", "Mountbatten", "Nehru", "Sardar Patel"],
+    answer: "Rajagopalachari"
+  },
+  {
+    question: "Which city is known as the Pink City?",
+    options: ["Jaipur", "Bikaner", "Udaipur", "Jodhpur"],
+    answer: "Jaipur"
+  },
+  {
+    question: "How many Fundamental Rights are guaranteed by the Constitution of India?",
+    options: ["6", "7", "8", "10"],
+    answer: "6"
+  },
+  {
+    question: "Which is the southernmost point of India?",
+    options: ["Indira Point", "Kanyakumari", "Rameshwaram", "Lakshadweep"],
+    answer: "Indira Point"
+  },
+  {
+    question: "Who gave the slogan 'Inquilab Zindabad'?",
+    options: ["Bhagat Singh", "Subhash Chandra Bose", "Mahatma Gandhi", "Sardar Patel"],
+    answer: "Bhagat Singh"
+  },
+  {
+    question: "Which Indian state has the longest coastline?",
+    options: ["Maharashtra", "Andhra Pradesh", "Tamil Nadu", "Gujarat"],
+    answer: "Gujarat"
+  },
+  {
+    question: "Who was the first woman Prime Minister of India?",
+    options: ["Sarojini Naidu", "Indira Gandhi", "Pratibha Patil", "Sushma Swaraj"],
+    answer: "Indira Gandhi"
+  },
+  {
+    question: "In which year was the first war of independence fought?",
+    options: ["1857", "1835", "1885", "1905"],
+    answer: "1857"
+  },
+  {
+    question: "Which city is located on the banks of the river Yamuna?",
+    options: ["Delhi", "Kolkata", "Mumbai", "Ahmedabad"],
+    answer: "Delhi"
+  },
+  {
+    question: "Who appoints the Chief Minister of a state?",
+    options: ["President", "Prime Minister", "Governor", "Chief Justice"],
+    answer: "Governor"
+  },
+  {
+    question: "Which Mughal emperor built the Red Fort?",
+    options: ["Akbar", "Babur", "Shah Jahan", "Aurangzeb"],
+    answer: "Shah Jahan"
+  },
+  {
+    question: "Which is the largest desert in India?",
+    options: ["Rann of Kutch", "Cholistan", "Thar", "Ladakh"],
+    answer: "Thar"
+  },
+  {
+    question: "What is the minimum age to vote in India?",
+    options: ["16", "18", "21", "25"],
+    answer: "18"
+  },
+  {
+    question: "Which movement was led by Mahatma Gandhi in 1942?",
+    options: ["Non-Cooperation", "Civil Disobedience", "Quit India", "Swadeshi"],
+    answer: "Quit India"
+  },
+  {
+    question: "Where is the Charminar located?",
+    options: ["Lucknow", "Hyderabad", "Delhi", "Agra"],
+    answer: "Hyderabad"
+  },
+  {
+    question: "How many members are nominated to Rajya Sabha by the President?",
+    options: ["10", "12", "14", "8"],
+    answer: "12"
+  },
+  {
+    question: "Which state is called the 'Spice Garden of India'?",
+    options: ["Kerala", "Tamil Nadu", "Karnataka", "Assam"],
+    answer: "Kerala"
+  },
+  {
+    question: "Who founded the Indian National Congress?",
+    options: ["Mahatma Gandhi", "Dadabhai Naoroji", "A.O. Hume", "Tilak"],
+    answer: "A.O. Hume"
+  },
+  {
+    question: "Which river is also known as 'Dakshin Ganga'?",
+    options: ["Narmada", "Cauvery", "Godavari", "Krishna"],
+    answer: "Godavari"
+  },
+  {
+    question: "Who was the first woman President of India?",
+    options: ["Indira Gandhi", "Sarojini Naidu", "Sonia Gandhi", "Pratibha Patil"],
+    answer: "Pratibha Patil"
+  },
+  {
+    question: "Which is the largest plateau in India?",
+    options: ["Malwa Plateau", "Deccan Plateau", "Chota Nagpur Plateau", "Tibet Plateau"],
+    answer: "Deccan Plateau"
+  },
+  {
+    question: "When was the Indian Parliament building inaugurated?",
+    options: ["1915", "1927", "1930", "1942"],
+    answer: "1927"
+  },
+  {
+    question: "Which place is known for the Sun Temple?",
+    options: ["Hampi", "Konark", "Khajuraho", "Mahabalipuram"],
+    answer: "Konark"
+  },
+  {
+    question: "What is the tenure of a Rajya Sabha member?",
+    options: ["3 years", "5 years", "6 years", "7 years"],
+    answer: "6 years"
+  },
+  {
+    question: "Which river originates from Amarkantak?",
+    options: ["Yamuna", "Godavari", "Narmada", "Krishna"],
+    answer: "Narmada"
+  },
+  {
+    question: "Who is known as the 'Father of Indian Constitution'?",
+    options: ["Rajendra Prasad", "Sardar Patel", "B.R. Ambedkar", "Jawaharlal Nehru"],
+    answer: "B.R. Ambedkar"
+  },
+  {
+    question: "Which city is known as the ‘City of Joy’?",
+    options: ["Mumbai", "Kolkata", "Delhi", "Bangalore"],
+    answer: "Kolkata"
+  },
+  {
+    question: "Who was the first Governor-General of India?",
+    options: ["William Bentinck", "Lord Dalhousie", "Warren Hastings", "Robert Clive"],
+    answer: "Warren Hastings"
+  },
+  {
+    question: "Which Indian state shares border with the most countries?",
+    options: ["Sikkim", "Arunachal Pradesh", "Uttar Pradesh", "West Bengal"],
+    answer: "Arunachal Pradesh"
+  },
+  {
+    question: "How many Lok Sabha seats are there?",
+    options: ["545", "552", "560", "540"],
+    answer: "545"
+  },
+  {
+    question: "Who was the viceroy during the Partition of Bengal (1905)?",
+    options: ["Lord Curzon", "Lord Minto", "Lord Ripon", "Lord Hardinge"],
+    answer: "Lord Curzon"
+  },
+  {
+    question: "Which river flows through the Grand Canyon in the USA?",
+    options: ["Colorado", "Mississippi", "Amazon", "Missouri"],
+    answer: "Colorado"
+  },
+  {
+    question: "In which year was the Simon Commission appointed?",
+    options: ["1928", "1930", "1922", "1935"],
+    answer: "1928"
+  },
+  {
+    question: "Which state has no international boundary?",
+    options: ["Punjab", "Madhya Pradesh", "Bihar", "Assam"],
+    answer: "Madhya Pradesh"
+  },
+  {
+    question: "Which freedom fighter was known as Lokmanya?",
+    options: ["Tilak", "Lala Lajpat Rai", "Gokhale", "Bose"],
+    answer: "Tilak"
+  },
+  {
+    question: "Which Indian leader gave the slogan 'Jai Jawan Jai Kisan'?",
+    options: ["Mahatma Gandhi", "Jawaharlal Nehru", "Lal Bahadur Shastri", "Indira Gandhi"],
+    answer: "Lal Bahadur Shastri"
+  },
+  {
+    question: "Which city is located on the banks of the river Ganga?",
+    options: ["Kanpur", "Patna", "Kolkata", "All of the above"],
+    answer: "All of the above"
+  },
+  {
+    question: "How many High Courts are there in India (as of 2024)?",
+    options: ["24", "25", "26", "27"],
+    answer: "25"
+  },
+  {
+    question: "Who was the founder of the Mughal Empire in India?",
+    options: ["Akbar", "Babur", "Shah Jahan", "Humayun"],
+    answer: "Babur"
+  },
+  {
+    question: "Which is the smallest state in India by area?",
+    options: ["Goa", "Sikkim", "Tripura", "Manipur"],
+    answer: "Goa"
+  },
+  {
+    question: "Who was the first Indian to go to space?",
+    options: ["Kalpana Chawla", "Rakesh Sharma", "Sunita Williams", "Vikram Sarabhai"],
+    answer: "Rakesh Sharma"
+  },
+  {
+    question: "What is the tenure of the President of India?",
+    options: ["4 years", "5 years", "6 years", "7 years"],
+    answer: "5 years"
+  },
+  {
+    question: "Which city is called the 'Silicon Valley of India'?",
+    options: ["Hyderabad", "Bangalore", "Pune", "Gurgaon"],
+    answer: "Bangalore"
+  },
+  {
+    question: "Who was the first female governor of an Indian state?",
+    options: ["Sarojini Naidu", "Indira Gandhi", "Pratibha Patil", "Sushma Swaraj"],
+    answer: "Sarojini Naidu"
+  },
+  {
+    question: "Which is the easternmost state of India?",
+    options: ["Manipur", "Nagaland", "Arunachal Pradesh", "Assam"],
+    answer: "Arunachal Pradesh"
+  },
+  {
+    question: "Which Indian freedom fighter founded the 'Azad Hind Fauj'?",
+    options: ["Bhagat Singh", "Lala Lajpat Rai", "Subhas Chandra Bose", "Gandhiji"],
+    answer: "Subhas Chandra Bose"
+  },
+  {
+    question: "Which strait separates India and Sri Lanka?",
+    options: ["Malacca Strait", "Palk Strait", "Hormuz Strait", "Bass Strait"],
+    answer: "Palk Strait"
+  },
+  {
+    question: "Which schedule of the Constitution deals with Panchayati Raj?",
+    options: ["10th", "11th", "12th", "9th"],
+    answer: "11th"
+  },
+  {
+    question: "What is the length of India’s coastline?",
+    options: ["5,100 km", "6,100 km", "7,516 km", "8,100 km"],
+    answer: "7,516 km"
+  },
+  {
+    question: "Which historical monument is located in Agra?",
+    options: ["Red Fort", "Charminar", "Taj Mahal", "Qutub Minar"],
+    answer: "Taj Mahal"
+  },
+  {
+    question: "Who was the Viceroy during the Jallianwala Bagh massacre?",
+    options: ["Lord Irwin", "Lord Reading", "Lord Chelmsford", "Lord Curzon"],
+    answer: "Lord Chelmsford"
+  },
+  {
+    question: "Which Indian leader is known as 'Netaji'?",
+    options: ["Rajendra Prasad", "Bose", "Tilak", "Jawaharlal Nehru"],
+    answer: "Subhas Chandra Bose"
+  },
+  {
+    question: "What is the minimum age to become the Prime Minister of India?",
+    options: ["25", "30", "35", "None of these"],
+    answer: "25"
+  },
+  {
+    question: "Which river originates from the Mansarovar Lake?",
+    options: ["Ganga", "Yamuna", "Indus", "Brahmaputra"],
+    answer: "Indus"
+  },
+  {
+    question: "Which Indian state has the largest area?",
+    options: ["Uttar Pradesh", "Maharashtra", "Madhya Pradesh", "Rajasthan"],
+    answer: "Rajasthan"
+  },
+  {
+    question: "Which part of the Constitution deals with Directive Principles?",
+    options: ["Part III", "Part IV", "Part V", "Part VI"],
+    answer: "Part IV"
+  },
+  {
+    question: "Which Article deals with the emergency provisions?",
+    options: ["Article 356", "Article 370", "Article 352", "Article 360"],
+    answer: "Article 352"
+  },
+  {
+    question: "Which dynasty built the Khajuraho temples?",
+    options: ["Maurya", "Gupta", "Chandela", "Chola"],
+    answer: "Chandela"
+  },
+  {
+    question: "Which is the only active volcano in India?",
+    options: ["Andaman", "Barren Island", "Nicobar", "Lakshadweep"],
+    answer: "Barren Island"
+  },
+  {
+    question: "Who was the first Chief Election Commissioner of India?",
+    options: ["Sukumar Sen", "T.N. Seshan", "V.S. Ramadevi", "Sunil Arora"],
+    answer: "Sukumar Sen"
+  },
+  {
+    question: "Which state is the largest producer of wheat in India?",
+    options: ["Madhya Pradesh", "Haryana", "Punjab", "Uttar Pradesh"],
+    answer: "Uttar Pradesh"
+  },
+  {
+    question: "What is the name of the Indian Parliament's Upper House?",
+    options: ["Lok Sabha", "Rajya Sabha", "Vidhan Parishad", "Assembly"],
+    answer: "Rajya Sabha"
+  },
+  {
+    question: "Which mountain range separates Kashmir from Ladakh?",
+    options: ["Aravalli", "Zaskar", "Himalayas", "Vindhya"],
+    answer: "Zaskar"
+  },
+  {
+    question: "Who wrote 'Discovery of India'?",
+    options: ["Ambedkar", "Tilak", "Gandhi", "Nehru"],
+    answer: "Jawaharlal Nehru"
+  },
+  {
+    question: "In which year was the Right to Education Act passed?",
+    options: ["2005", "2007", "2009", "2010"],
+    answer: "2009"
+  },
+  {
+    question: "Which is the national aquatic animal of India?",
+    options: ["Blue whale", "River dolphin", "Sea turtle", "Otter"],
+    answer: "River dolphin"
+  },
+  {
+    question: "How many union territories are there in India (2024)?",
+    options: ["6", "7", "8", "9"],
+    answer: "8"
+  },
+  {
+    question: "Where is the Parliament of India located?",
+    options: ["Mumbai", "New Delhi", "Chandigarh", "Kolkata"],
+    answer: "New Delhi"
+  },
+  {
+    question: "Which Article of the Indian Constitution abolishes untouchability?",
+    options: ["Article 14", "Article 15", "Article 17", "Article 21"],
+    answer: "Article 17"
+  },
+  {
+    question: "What is the literacy rate of India (approx as of 2024)?",
+    options: ["62%", "74%", "80%", "91%"],
+    answer: "74%"
+  },
+  {
+    question: "Which national park is famous for tigers?",
+    options: ["Kaziranga", "Gir", "Corbett", "Sundarbans"],
+    answer: "Corbett"
+  },
+  {
+    question: "Where is the India Gate located?",
+    options: ["Mumbai", "New Delhi", "Chennai", "Lucknow"],
+    answer: "New Delhi"
+  },
+  {
+    question: "Which dam is built on the Narmada River?",
+    options: ["Bhakra Nangal", "Sardar Sarovar", "Tehri", "Mettur"],
+    answer: "Sardar Sarovar"
+  },
+  {
+    question: "Which Article provides for the amendment of the Constitution?",
+    options: ["Article 360", "Article 368", "Article 370", "Article 356"],
+    answer: "Article 368"
+  },
+  {
+    question: "Which state is known as the 'Land of Five Rivers'?",
+    options: ["Haryana", "Punjab", "Uttar Pradesh", "Bihar"],
+    answer: "Punjab"
+  },
+  {
+    question: "What is the full form of GST?",
+    options: ["General Service Tax", "Goods and Sales Tax", "Goods and Services Tax", "Government Sales Tax"],
+    answer: "Goods and Services Tax"
+  },
+  {
+    question: "Which Indian river flows westward into the Arabian Sea?",
+    options: ["Ganga", "Yamuna", "Godavari", "Narmada"],
+    answer: "Narmada"
+  },
+  {
+    question: "Who appoints the Chief Justice of India?",
+    options: ["President", "Prime Minister", "Lok Sabha", "Supreme Court"],
+    answer: "President"
+  },
+  {
+    question: "Which Indian state has the highest literacy rate?",
+    options: ["Kerala", "Tamil Nadu", "Maharashtra", "Goa"],
+    answer: "Kerala"
+  },
+  {
+    question: "Who gave the slogan 'Swaraj is my birthright'?",
+    options: ["Mahatma Gandhi", "Tilak", "Bose", "Jawaharlal Nehru"],
+    answer: "Bal Gangadhar Tilak"
+  },
+  {
+    question: "Which is the deepest river valley in India?",
+    options: ["Brahmaputra", "Godavari", "Narmada", "Kosi"],
+    answer: "Narmada"
+  },
+  {
+    question: "Which day is celebrated as Constitution Day in India?",
+    options: ["15 August", "26 November", "26 January", "2 October"],
+    answer: "26 November"
+  },
+  {
+    question: "Who was the first Vice President of India?",
+    options: ["Dr. S. Radhakrishnan", "Dr. Zakir Hussain", "Rajendra Prasad", "M. Hidayatullah"],
+    answer: "Dr. S. Radhakrishnan"
+  },
+webdesigning_questions = [
+    {
+        "question": "Which HTML tag is used to define the largest heading?",
+        "options": ["<h6>", "<head>", "<h1>", "<heading>"],
+        "answer": "<h1>"
+    },
+    {
+        "question": "Which attribute is used to provide a unique name to an HTML element?",
+        "options": ["class", "id", "style", "name"],
+        "answer": "id"
+    },
+    {
+        "question": "In CSS, which property is used to change the text color?",
+        "options": ["background-color", "font-color", "text-color", "color"],
+        "answer": "color"
+    },
+    {
+        "question": "Which HTML tag is used to insert a line break?",
+        "options": ["<break>", "<br>", "<lb>", "<line>"],
+        "answer": "<br>"
+    },
+    {
+        "question": "Which CSS property controls the size of text?",
+        "options": ["text-style", "font-style", "font-size", "text-size"],
+        "answer": "font-size"
+    },
+    {
+        "question": "Which HTML tag is used to create a hyperlink?",
+        "options": ["<link>", "<a>", "<href>", "<hyper>"],
+        "answer": "<a>"
+    },
+    {
+        "question": "Which CSS property is used to change the background color?",
+        "options": ["bgcolor", "background-color", "color", "background"],
+        "answer": "background-color"
+    },
+    {
+        "question": "Which HTML element is used to display an image?",
+        "options": ["<img>", "<image>", "<src>", "<pic>"],
+        "answer": "<img>"
+    },
+    {
+        "question": "In HTML, lists without any order use which tag?",
+        "options": ["<ul>", "<ol>", "<li>", "<list>"],
+        "answer": "<ul>"
+    },
+    {
+        "question": "Which CSS property is used to make text bold?",
+        "options": ["font-weight", "font-style", "text-bold", "weight"],
+        "answer": "font-weight"
+    },
+	
+    {
+        "question": "Which HTML tag is used to create a hyperlink?",
+        "options": ["<a>", "<link>", "<href>", "<hyper>"],
+        "answer": "<a>"
+    },
+    {
+        "question": "Which CSS property controls the text size?",
+        "options": ["font-style", "text-size", "font-size", "text-style"],
+        "answer": "font-size"
+    },
+    {
+        "question": "Which JavaScript function is used to print something on the console?",
+        "options": ["print()", "console.log()", "log()", "write()"],
+        "answer": "console.log()"
+    },
+	web_questions_part1 = [
+    {
+        "question": "Which HTML tag is used to create a hyperlink?",
+        "options": ["<a>", "<link>", "<href>", "<hyper>"],
+        "answer": "<a>"
+    },
+    {
+        "question": "Which CSS property controls the text size?",
+        "options": ["font-style", "text-size", "font-size", "text-style"],
+        "answer": "font-size"
+    },
+    {
+        "question": "Which JavaScript function is used to print something on the console?",
+        "options": ["print()", "console.log()", "log()", "write()"],
+        "answer": "console.log()"
+    },
+    {
+        "question": "Which HTML tag is used to insert an image?",
+        "options": ["<img>", "<image>", "<pic>", "<src>"],
+        "answer": "<img>"
+    },
+    {
+        "question": "Which attribute specifies the alternate text for an image in HTML?",
+        "options": ["alt", "title", "src", "name"],
+        "answer": "alt"
+    },
+    {
+        "question": "Which HTML tag is used to define a table row?",
+        "options": ["<td>", "<tr>", "<th>", "<table>"],
+        "answer": "<tr>"
+    },
+    {
+        "question": "Which CSS property is used to change the background color?",
+        "options": ["bgcolor", "background-color", "color", "bg-style"],
+        "answer": "background-color"
+    },
+    {
+        "question": "Which HTML tag is used for the largest heading?",
+        "options": ["<h6>", "<h1>", "<heading>", "<head>"],
+        "answer": "<h1>"
+    },
+    {
+        "question": "Which HTML tag is used for creating a line break?",
+        "options": ["<br>", "<lb>", "<break>", "<newline>"],
+        "answer": "<br>"
+    },
+    {
+        "question": "Which CSS property is used to set the text color?",
+        "options": ["text-color", "color", "font-color", "bg-color"],
+        "answer": "color"
+    },
+    {
+        "question": "Which HTML element is used for creating an ordered list?",
+        "options": ["<ul>", "<ol>", "<li>", "<dl>"],
+        "answer": "<ol>"
+    },
+    {
+        "question": "Which HTML attribute is used to specify a unique id?",
+        "options": ["class", "id", "name", "unique"],
+        "answer": "id"
+    },
+    {
+        "question": "Which HTML tag is used for inserting JavaScript code?",
+        "options": ["<js>", "<script>", "<javascript>", "<code>"],
+        "answer": "<script>"
+    },
+    {
+        "question": "Which CSS property is used to change the font?",
+        "options": ["font-weight", "font-family", "font-style", "text-family"],
+        "answer": "font-family"
+    },
+    {
+        "question": "Which HTML tag is used for a drop-down list?",
+        "options": ["<input>", "<select>", "<list>", "<dropdown>"],
+        "answer": "<select>"
+    },
+    {
+        "question": "Which JavaScript keyword is used to declare a variable?",
+        "options": ["var", "let", "const", "All of the above"],
+        "answer": "All of the above"
+    },
+    {
+        "question": "Which HTML tag is used for inserting a horizontal line?",
+        "options": ["<line>", "<hr>", "<hl>", "<br>"],
+        "answer": "<hr>"
+    },
+    {
+        "question": "Which CSS property is used to make text bold?",
+        "options": ["font-weight", "text-bold", "bold", "font-style"],
+        "answer": "font-weight"
+    },
+    {
+        "question": "Which HTML tag is used to display a numbered list?",
+        "options": ["<ol>", "<ul>", "<list>", "<dl>"],
+        "answer": "<ol>"
+    },
+    {
+        "question": "Which CSS property is used for making text italic?",
+        "options": ["font-weight", "font-style", "text-italic", "font-italic"],
+        "answer": "font-style"
+    },
+    {
+        "question": "Which HTML attribute is used to specify an inline CSS style?",
+        "options": ["css", "style", "class", "styles"],
+        "answer": "style"
+    },
+    {
+        "question": "Which HTML tag is used for inserting a checkbox?",
+        "options": ["<box>", "<input type='checkbox'>", "<check>", "<cb>"],
+        "answer": "<input type='checkbox'>"
+    },
+    {
+        "question": "Which CSS property is used to control line height?",
+        "options": ["line-height", "text-height", "height", "font-height"],
+        "answer": "line-height"
+    },
+    {
+        "question": "Which HTML tag is used to display preformatted text?",
+        "options": ["<pre>", "<code>", "<text>", "<tt>"],
+        "answer": "<pre>"
+    },
+    {
+        "question": "Which JavaScript method is used to write HTML output?",
+        "options": ["console.log()", "document.write()", "print()", "innerHTML()"],
+        "answer": "document.write()"
+    },
+    {
+        "question": "Which HTML element is used to define a form?",
+        "options": ["<form>", "<input>", "<fieldset>", "<forms>"],
+        "answer": "<form>"
+    },
+    {
+        "question": "Which CSS property controls the space between elements?",
+        "options": ["margin", "padding", "border", "spacing"],
+        "answer": "margin"
+    },
+    {
+        "question": "Which HTML tag is used for adding comments?",
+        "options": ["<!-- comment -->", "// comment", "/* comment */", "<comment>"],
+        "answer": "<!-- comment -->"
+    },
+    {
+        "question": "Which CSS property adds space inside an element?",
+        "options": ["padding", "margin", "border", "spacing"],
+        "answer": "padding"
+    },
+    {
+        "question": "Which HTML element is used to play audio files?",
+        "options": ["<sound>", "<audio>", "<music>", "<play>"],
+        "answer": "<audio>"
+    },
+    {
+        "question": "Which CSS property is used to underline text?",
+        "options": ["text-style", "text-decoration", "decoration", "underline"],
+        "answer": "text-decoration"
+    },
+    {
+        "question": "Which HTML element is used to embed a video?",
+        "options": ["<movie>", "<video>", "<media>", "<play>"],
+        "answer": "<video>"
+    },
+    {
+        "question": "Which CSS property changes the text alignment?",
+        "options": ["text-align", "align", "font-align", "align-text"],
+        "answer": "text-align"
+    },
+    {
+        "question": "Which HTML tag is used to define the main heading section?",
+        "options": ["<header>", "<head>", "<title>", "<section>"],
+        "answer": "<header>"
+    },
+    {
+        "question": "Which JavaScript symbol is used for single-line comments?",
+        "options": ["//", "/* */", "<!-- -->", "#"],
+        "answer": "//"
+    },
+    {
+        "question": "Which HTML element is used to specify a footer?",
+        "options": ["<foot>", "<footer>", "<bottom>", "<end>"],
+        "answer": "<footer>"
+    },
+    {
+        "question": "Which CSS property sets the width of an element?",
+        "options": ["size", "length", "width", "height"],
+        "answer": "width"
+    },
+    {
+        "question": "Which HTML tag is used to make text bold?",
+        "options": ["<b>", "<strong>", "Both A and B", "<bold>"],
+        "answer": "Both A and B"
+    },
+    {
+        "question": "Which CSS property is used to add shadow to text?",
+        "options": ["font-shadow", "text-shadow", "shadow", "text-style"],
+        "answer": "text-shadow"
+    },
+    {
+        "question": "Which HTML tag is used to display italic text?",
+        "options": ["<i>", "<italic>", "<em>", "Both A and C"],
+        "answer": "Both A and C"
+    },
+    {
+        "question": "Which JavaScript function is used to display an alert box?",
+        "options": ["msg()", "alert()", "popup()", "box()"],
+        "answer": "alert()"
+    },
+    {
+        "question": "Which HTML tag is used to display an image from a URL?",
+        "options": ["<src>", "<img>", "<image>", "<pic>"],
+        "answer": "<img>"
+    },
+    {
+        "question": "Which CSS property is used to make corners rounded?",
+        "options": ["border", "border-radius", "corner", "round"],
+        "answer": "border-radius"
+    },
+    {
+        "question": "Which HTML tag defines a navigation link section?",
+        "options": ["<nav>", "<navigation>", "<menu>", "<links>"],
+        "answer": "<nav>"
+    },
+    {
+        "question": "Which CSS property sets the transparency of an element?",
+        "options": ["visibility", "display", "opacity", "alpha"],
+        "answer": "opacity"
+    },
+    {
+        "question": "Which HTML tag is used for defining metadata?",
+        "options": ["<head>", "<meta>", "<data>", "<info>"],
+        "answer": "<meta>"
+    },
+    {
+        "question": "Which CSS property controls element visibility?",
+        "options": ["display", "visibility", "opacity", "hidden"],
+        "answer": "visibility"
+    },
+    {
+        "question": "Which HTML attribute is used to open a link in a new tab?",
+        "options": ["target='_blank'", "newtab", "open", "window='_new'"],
+        "answer": "target='_blank'"
+    },
+    {
+        "question": "Which CSS property sets the maximum width of an element?",
+        "options": ["max-width", "width", "min-width", "size"],
+        "answer": "max-width"
+    },
+    {
+        "question": "Which HTML element is used to specify a table header?",
+        "options": ["<thead>", "<th>", "<td>", "<header>"],
+        "answer": "<th>"
+    },
+	webdesigning_questions = [
+    {
+        "question": "1. HTML का पूरा नाम क्या है?",
+        "options": ["HyperText Markup Language", "HighText Machine Language", "HyperText and Links Marking Language", "Home Tool Markup Language"],
+        "answer": "HyperText Markup Language"
+    },
+    {
+        "question": "2. HTML में सबसे बड़ा heading tag कौन सा है?",
+        "options": ["<h1>", "<h6>", "<head>", "<heading>"],
+        "answer": "<h1>"
+    },
+    {
+        "question": "3. CSS का पूरा नाम क्या है?",
+        "options": ["Creative Style System", "Cascading Style Sheets", "Computer Styling Sheets", "Colorful Style Syntax"],
+        "answer": "Cascading Style Sheets"
+    },
+    {
+        "question": "4. किसी webpage का title कहाँ लिखा जाता है?",
+        "options": ["<body>", "<title>", "<head>", "<meta>"],
+        "answer": "<title>"
+    },
+    {
+        "question": "5. HTML में image insert करने के लिए कौन सा tag use होता है?",
+        "options": ["<img>", "<image>", "<picture>", "<src>"],
+        "answer": "<img>"
+    },
+    {
+        "question": "6. CSS को HTML में जोड़ने का सही तरीका कौन सा है?",
+        "options": ["<style src='style.css'>", "<link rel='stylesheet' href='style.css'>", "<css>style.css</css>", "<stylesheet>"],
+        "answer": "<link rel='stylesheet' href='style.css'>"
+    },
+    {
+        "question": "7. HTML में hyperlink बनाने के लिए कौन सा tag use होता है?",
+        "options": ["<a>", "<link>", "<href>", "<hyper>"],
+        "answer": "<a>"
+    },
+    {
+        "question": "8. JavaScript किस प्रकार की भाषा है?",
+        "options": ["Markup Language", "Programming Language", "Scripting Language", "Style Sheet Language"],
+        "answer": "Scripting Language"
+    },
+    {
+        "question": "9. HTML में line break डालने के लिए कौन सा tag use होता है?",
+        "options": ["<br>", "<break>", "<lb>", "<line>"],
+        "answer": "<br>"
+    },
+    {
+        "question": "10. HTML में ordered list के लिए कौन सा tag use होता है?",
+        "options": ["<ul>", "<ol>", "<li>", "<list>"],
+        "answer": "<ol>"
+    },
+    {
+        "question": "11. HTML में table row बनाने के लिए कौन सा tag use होता है?",
+        "options": ["<tr>", "<td>", "<table>", "<row>"],
+        "answer": "<tr>"
+    },
+    {
+        "question": "12. HTML में comment लिखने का सही तरीका कौन सा है?",
+        "options": ["<!-- comment -->", "// comment", "/* comment */", "<comment>"],
+        "answer": "<!-- comment -->"
+    },
+    {
+        "question": "13. CSS में किसी element का background color बदलने के लिए कौन सा property use होता है?",
+        "options": ["bgcolor", "color", "background-color", "bg-color"],
+        "answer": "background-color"
+    },
+    {
+        "question": "14. HTML form में input देने के लिए कौन सा tag use होता है?",
+        "options": ["<form>", "<input>", "<textbox>", "<button>"],
+        "answer": "<input>"
+    },
+    {
+        "question": "15. HTML5 में video insert करने के लिए कौन सा tag use होता है?",
+        "options": ["<video>", "<media>", "<movie>", "<mp4>"],
+        "answer": "<video>"
+    },
+    {
+        "question": "16. CSS में text को bold करने के लिए कौन सा property use होता है?",
+        "options": ["font-weight", "text-bold", "font-style", "bold"],
+        "answer": "font-weight"
+    },
+    {
+        "question": "17. JavaScript में output दिखाने के लिए कौन सा function use होता है?",
+        "options": ["print()", "echo()", "document.write()", "printf()"],
+        "answer": "document.write()"
+    },
+    {
+        "question": "18. HTML में email link बनाने के लिए href attribute में क्या लिखा जाता है?",
+        "options": ["email:", "mailto:", "sendto:", "mail:"],
+        "answer": "mailto:"
+    },
+    {
+        "question": "19. CSS में किसी text को center align करने के लिए कौन सा property use होता है?",
+        "options": ["align", "text-align", "center", "font-align"],
+        "answer": "text-align"
+    },
+    {
+        "question": "20. HTML5 में semantic tag कौन सा है?",
+        "options": ["<div>", "<section>", "<span>", "<bold>"],
+        "answer": "<section>"
+    },
+    {
+        "question": "21. HTML में checkbox बनाने के लिए input का कौन सा type use होता है?",
+        "options": ["text", "check", "checkbox", "button"],
+        "answer": "checkbox"
+    },
+    {
+        "question": "22. HTML form data को server पर भेजने के लिए कौन सा method default होता है?",
+        "options": ["GET", "POST", "PUT", "SEND"],
+        "answer": "GET"
+    },
+    {
+        "question": "23. HTML में कौन सा attribute image को alternate text देता है?",
+        "options": ["alt", "src", "title", "text"],
+        "answer": "alt"
+    },
+    {
+        "question": "24. HTML5 में audio insert करने का सही tag कौन सा है?",
+        "options": ["<music>", "<sound>", "<audio>", "<mp3>"],
+        "answer": "<audio>"
+    },
+    {
+        "question": "25. CSS में border लगाने का property कौन सा है?",
+        "options": ["border-style", "border", "outline", "frame"],
+        "answer": "border"
+    },
+    {
+        "question": "26. JavaScript में variable declare करने के लिए कौन सा keyword use होता है?",
+        "options": ["int", "let", "var", "dim"],
+        "answer": "var"
+    },
+    {
+        "question": "27. HTML में unordered list के लिए कौन सा tag use होता है?",
+        "options": ["<ol>", "<ul>", "<list>", "<li>"],
+        "answer": "<ul>"
+    },
+    {
+        "question": "28. CSS में किसी element की height set करने के लिए कौन सा property use होता है?",
+        "options": ["height", "size", "element-height", "set-height"],
+        "answer": "height"
+    },
+    {
+        "question": "29. JavaScript किस ब्राउज़र के साथ पहली बार आया था?",
+        "options": ["Internet Explorer", "Netscape", "Mozilla Firefox", "Chrome"],
+        "answer": "Netscape"
+    },
+    {
+        "question": "30. HTML में italic text दिखाने का सही tag कौन सा है?",
+        "options": ["<i>", "<em>", "<italic>", "दोनों <i> और <em>"],
+        "answer": "दोनों <i> और <em>"
+    },
+    {
+        "question": "31. HTML5 में कौन सा attribute video autoplay करता है?",
+        "options": ["autoplay", "play", "run", "auto"],
+        "answer": "autoplay"
+    },
+    {
+        "question": "32. CSS में किसी text का font-family change करने के लिए कौन सा property use होता है?",
+        "options": ["text-family", "font-family", "style-font", "font"],
+        "answer": "font-family"
+    },
+    {
+        "question": "33. HTML form में password input के लिए कौन सा type use होता है?",
+        "options": ["password", "pwd", "text", "secret"],
+        "answer": "password"
+    },
+    {
+        "question": "34. HTML में responsive design के लिए कौन सा meta tag जरूरी है?",
+        "options": ["<meta charset='UTF-8'>", "<meta name='viewport' content='width=device-width, initial-scale=1.0'>", "<meta responsive>", "<meta device>"],
+        "answer": "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+    },
+    {
+        "question": "35. CSS में किसी element के चारों तरफ space देने के लिए कौन सा property use होता है?",
+        "options": ["margin", "padding", "spacing", "border-spacing"],
+        "answer": "margin"
+    },
+    {
+        "question": "36. HTML का कौन सा attribute image की चौड़ाई और ऊँचाई बताता है?",
+        "options": ["size", "width & height", "dimension", "length"],
+        "answer": "width & height"
+    },
+    {
+        "question": "37. JavaScript में strict mode enable करने के लिए क्या लिखा जाता है?",
+        "options": ["use strict;", "'use strict';", "enable strict;", "strict on;"],
+        "answer": "'use strict';"
+    },
+    {
+        "question": "38. HTML में कौन सा attribute किसी link को नई tab में खोलता है?",
+        "options": ["target='_blank'", "open='_new'", "tab='new'", "href='new'"],
+        "answer": "target='_blank'"
+    },
+    {
+        "question": "39. CSS Grid में rows और columns बनाने के लिए कौन सा property use होता है?",
+        "options": ["grid-template", "grid-template-rows & grid-template-columns", "grid-row-col", "grid-layout"],
+        "answer": "grid-template-rows & grid-template-columns"
+    },
+    {
+        "question": "40. HTML में कौन सा tag metadata store करता है?",
+        "options": ["<meta>", "<head>", "<data>", "<info>"],
+        "answer": "<meta>"
+    },
+    {
+        "question": "41. CSS में किसी element के अंदर space देने के लिए कौन सा property use होता है?",
+        "options": ["margin", "padding", "space", "inner-space"],
+        "answer": "padding"
+    },
+    {
+        "question": "42. HTML form में radio button बनाने के लिए कौन सा type use होता है?",
+        "options": ["radio", "option", "circle", "button"],
+        "answer": "radio"
+    },
+    {
+        "question": "43. HTML5 में कौन सा API local storage provide करता है?",
+        "options": ["LocalStorage API", "Web Storage API", "Session API", "Database API"],
+        "answer": "Web Storage API"
+    },
+    {
+        "question": "44. HTML में कौन सा tag inline element है?",
+        "options": ["<div>", "<span>", "<p>", "<h1>"],
+        "answer": "<span>"
+    },
+    {
+        "question": "45. CSS Flexbox में items align करने के लिए कौन सा property use होता है?",
+        "options": ["align-items", "justify-content", "flex-align", "item-align"],
+        "answer": "align-items"
+    },
+    {
+        "question": "46. HTML5 में canvas tag किस काम आता है?",
+        "options": ["Image draw करने के लिए", "Video play करने के लिए", "Audio play करने के लिए", "Table बनाने के लिए"],
+        "answer": "Image draw करने के लिए"
+    },
+    {
+        "question": "47. JavaScript में array की लंबाई निकालने के लिए कौन सा property use होता है?",
+        "options": ["size", "length", "count", "total"],
+        "answer": "length"
+    },
+    {
+        "question": "48. HTML में कौन सा attribute किसी image का source बताता है?",
+        "options": ["src", "href", "link", "path"],
+        "answer": "src"
+    },
+    {
+        "question": "49. CSS में z-index किस काम आता है?",
+        "options": ["Element की position बताने के लिए", "Layer order set करने के लिए", "Size बढ़ाने के लिए", "Font set करने के लिए"],
+        "answer": "Layer order set करने के लिए"
+    },
+    {
+        "question": "50. HTML में कौन सा tag block-level element है?",
+        "options": ["<div>", "<span>", "<a>", "<img>"],
+        "answer": "<div>"
+    },
+	dbms_questions = [
+    {"question": "What does DBMS stand for?", 
+     "options": ["Database Management System", "Data Backup Management System", "Database Manipulation Service", "Data Banking Mainframe Software"], 
+     "answer": "Database Management System"},
+
+    {"question": "Which of the following is NOT a type of database model?", 
+     "options": ["Hierarchical", "Network", "Relational", "Linear"], 
+     "answer": "Linear"},
+
+    {"question": "Which key uniquely identifies a record in a table?", 
+     "options": ["Candidate Key", "Primary Key", "Foreign Key", "Alternate Key"], 
+     "answer": "Primary Key"},
+
+    {"question": "SQL stands for?", 
+     "options": ["Structured Query Language", "Sequential Query Language", "Standard Question Language", "Systematic Query Logic"], 
+     "answer": "Structured Query Language"},
+
+    {"question": "Which command is used to remove a table from a database?", 
+     "options": ["DELETE", "DROP", "REMOVE", "CLEAR"], 
+     "answer": "DROP"},
+
+    {"question": "In ER model, entities are represented by?", 
+     "options": ["Rectangles", "Ovals", "Diamonds", "Lines"], 
+     "answer": "Rectangles"},
+
+    {"question": "Normalization is used to?", 
+     "options": ["Reduce redundancy", "Increase redundancy", "Backup data", "Encrypt data"], 
+     "answer": "Reduce redundancy"},
+
+    {"question": "Which of the following is a DML command?", 
+     "options": ["CREATE", "UPDATE", "DROP", "ALTER"], 
+     "answer": "UPDATE"},
+
+    {"question": "Which language is used to define database schema?", 
+     "options": ["DML", "DDL", "DCL", "TCL"], 
+     "answer": "DDL"},
+
+    {"question": "Foreign key is used to?", 
+     "options": ["Ensure uniqueness", "Link two tables", "Encrypt data", "Sort data"], 
+     "answer": "Link two tables"},
+
+    {"question": "Which normal form removes partial dependency?", 
+     "options": ["1NF", "2NF", "3NF", "BCNF"], 
+     "answer": "2NF"},
+
+    {"question": "Transaction follows which properties?", 
+     "options": ["BASE", "ACID", "CRUD", "SOAP"], 
+     "answer": "ACID"},
+
+    {"question": "Which operation combines rows from two or more tables?", 
+     "options": ["JOIN", "UNION", "INTERSECT", "SELECT"], 
+     "answer": "JOIN"},
+
+    {"question": "What is a super key?", 
+     "options": ["Set of keys that uniquely identifies rows", "A backup key", "Key used for encryption", "Temporary key"], 
+     "answer": "Set of keys that uniquely identifies rows"},
+
+    {"question": "Which of the following is a DCL command?", 
+     "options": ["GRANT", "DELETE", "UPDATE", "SELECT"], 
+     "answer": "GRANT"},
+
+    {"question": "Which type of join returns all rows from both tables?", 
+     "options": ["Inner Join", "Outer Join", "Cross Join", "Natural Join"], 
+     "answer": "Outer Join"},
+
+    {"question": "In DBMS, a tuple represents?", 
+     "options": ["Row", "Column", "Table", "Schema"], 
+     "answer": "Row"},
+
+    {"question": "Which SQL function returns the number of rows?", 
+     "options": ["COUNT()", "SUM()", "AVG()", "MAX()"], 
+     "answer": "COUNT()"},
+
+    {"question": "Which constraint ensures that a column cannot have NULL values?", 
+     "options": ["UNIQUE", "NOT NULL", "CHECK", "DEFAULT"], 
+     "answer": "NOT NULL"},
+
+    {"question": "BCNF is stronger than?", 
+     "options": ["1NF", "2NF", "3NF", "4NF"], 
+     "answer": "3NF"},
+
+    {"question": "Which database model uses parent-child relationships?", 
+     "options": ["Relational", "Hierarchical", "Network", "Object-Oriented"], 
+     "answer": "Hierarchical"},
+
+    {"question": "Which SQL clause is used to group rows?", 
+     "options": ["ORDER BY", "GROUP BY", "HAVING", "WHERE"], 
+     "answer": "GROUP BY"},
+
+    {"question": "Which of these is an aggregate function?", 
+     "options": ["SUM()", "UPDATE", "DELETE", "INSERT"], 
+     "answer": "SUM()"},
+
+    {"question": "Deadlock occurs when?", 
+     "options": ["Two transactions wait indefinitely", "Database crashes", "Data is duplicated", "Primary key is lost"], 
+     "answer": "Two transactions wait indefinitely"},
+
+    {"question": "Which command is used to save changes in SQL?", 
+     "options": ["SAVE", "COMMIT", "ROLLBACK", "END"], 
+     "answer": "COMMIT"},
+
+    {"question": "Which SQL keyword is used to avoid duplicates?", 
+     "options": ["UNIQUE", "DISTINCT", "PRIMARY", "ONLY"], 
+     "answer": "DISTINCT"},
+
+    {"question": "Which is faster: Clustered index or Non-clustered index?", 
+     "options": ["Clustered Index", "Non-clustered Index", "Both same", "Depends on DBMS"], 
+     "answer": "Clustered Index"},
+
+    {"question": "What is the maximum number of primary keys in a table?", 
+     "options": ["1", "2", "Unlimited", "Depends on DBMS"], 
+     "answer": "1"},
+
+    {"question": "Which SQL statement is used to remove duplicates?", 
+     "options": ["SELECT DISTINCT", "SELECT UNIQUE", "REMOVE DUP", "DELETE DUPLICATE"], 
+     "answer": "SELECT DISTINCT"},
+
+    {"question": "Which type of key is created when no other candidate key is chosen?", 
+     "options": ["Primary Key", "Alternate Key", "Foreign Key", "Super Key"], 
+     "answer": "Alternate Key"},
+
+    {"question": "Which command is used to undo changes in SQL?", 
+     "options": ["ROLLBACK", "UNDO", "CANCEL", "REVERSE"], 
+     "answer": "ROLLBACK"},
+
+    {"question": "What is data redundancy?", 
+     "options": ["Repetition of data", "Missing data", "Encrypted data", "Sorted data"], 
+     "answer": "Repetition of data"},
+
+    {"question": "What is a view in SQL?", 
+     "options": ["Virtual table", "Permanent table", "Temporary index", "Backup copy"], 
+     "answer": "Virtual table"},
+
+    {"question": "Which constraint is used to check condition on data?", 
+     "options": ["NOT NULL", "CHECK", "DEFAULT", "UNIQUE"], 
+     "answer": "CHECK"},
+
+    {"question": "Which SQL clause filters rows?", 
+     "options": ["WHERE", "HAVING", "GROUP BY", "ORDER BY"], 
+     "answer": "WHERE"},
+
+    {"question": "Which language is used to access data?", 
+     "options": ["DML", "DDL", "DCL", "TCL"], 
+     "answer": "DML"},
+
+    {"question": "Which join returns matching rows only?", 
+     "options": ["Inner Join", "Left Join", "Right Join", "Full Join"], 
+     "answer": "Inner Join"},
+
+    {"question": "Which of these is a TCL command?", 
+     "options": ["COMMIT", "ROLLBACK", "SAVEPOINT", "All of the above"], 
+     "answer": "All of the above"},
+
+    {"question": "What is the full form of RDBMS?", 
+     "options": ["Relational Database Management System", "Remote Database Management System", "Regional Database Management Software", "Random Data Backup System"], 
+     "answer": "Relational Database Management System"},
+
+    {"question": "Which SQL clause is used with aggregate functions?", 
+     "options": ["HAVING", "WHERE", "ORDER BY", "DISTINCT"], 
+     "answer": "HAVING"},
+
+    {"question": "Which is NOT a type of SQL command?", 
+     "options": ["DCL", "TCL", "XML", "DDL"], 
+     "answer": "XML"},
+
+    {"question": "Which index allows duplicate values?", 
+     "options": ["Non-clustered", "Clustered", "Primary", "Unique"], 
+     "answer": "Non-clustered"},
+
+    {"question": "Which key is used to maintain referential integrity?", 
+     "options": ["Foreign Key", "Primary Key", "Candidate Key", "Alternate Key"], 
+     "answer": "Foreign Key"},
+
+    {"question": "Which operation in relational algebra is represented by π?", 
+     "options": ["Projection", "Selection", "Join", "Union"], 
+     "answer": "Projection"},
+
+    {"question": "Which operation in relational algebra is represented by σ?", 
+     "options": ["Selection", "Projection", "Union", "Join"], 
+     "answer": "Selection"},
+
+    {"question": "Which is a command to add new data in SQL?", 
+     "options": ["INSERT", "APPEND", "UPDATE", "ADD"], 
+     "answer": "INSERT"},
+
+    {"question": "Which is used to remove all rows but keep table structure?", 
+     "options": ["TRUNCATE", "DELETE", "DROP", "REMOVE"], 
+     "answer": "TRUNCATE"},
+
+    {"question": "Which SQL clause arranges rows?", 
+     "options": ["ORDER BY", "GROUP BY", "WHERE", "HAVING"], 
+     "answer": "ORDER BY"},
+
+    {"question": "Which of the following is NOT a constraint?", 
+     "options": ["UNIQUE", "NOT NULL", "ORDER BY", "CHECK"], 
+     "answer": "ORDER BY"},
+	 dbms_questions = [
+    {"question": "DBMS ka full form kya hai?", "options": ["Database Management System", "Data Manipulation System", "Database Monitoring System", "Data Management Software"], "answer": "Database Management System"},
+    {"question": "RDBMS me 'R' ka matlab kya hai?", "options": ["Reliable", "Relational", "Remote", "Random"], "answer": "Relational"},
+    {"question": "DBMS ka main function kya hota hai?", "options": ["Data ko store karna", "Data ko manipulate karna", "Data ko secure karna", "Ye sabhi"], "answer": "Ye sabhi"},
+    {"question": "Database table me rows ko kya kaha jata hai?", "options": ["Attribute", "Tuple", "Field", "Domain"], "answer": "Tuple"},
+    {"question": "Database table me columns ko kya kaha jata hai?", "options": ["Tuple", "Attribute", "Record", "Degree"], "answer": "Attribute"},
+    {"question": "Primary Key ka kaam kya hai?", "options": ["Duplicate allow karna", "Unique aur Not Null hona", "Foreign key banjana", "Index create karna"], "answer": "Unique aur Not Null hona"},
+    {"question": "Foreign Key kis cheez ko refer karti hai?", "options": ["Apne hi table ko", "Dusre table ki Primary Key ko", "Null value ko", "Index ko"], "answer": "Dusre table ki Primary Key ko"},
+    {"question": "Candidate Key kya hoti hai?", "options": ["Jo foreign key ban sakti hai", "Jo primary key ban sakti hai", "Jo duplicate hoti hai", "Jo null hoti hai"], "answer": "Jo primary key ban sakti hai"},
+    {"question": "Super Key kya hai?", "options": ["Attributes ka wo set jo record ko uniquely identify kare", "Null key", "Duplicate key", "Composite key"], "answer": "Attributes ka wo set jo record ko uniquely identify kare"},
+    {"question": "Composite Key ka matlab kya hai?", "options": ["Single attribute key", "Multiple attribute key", "Foreign key", "Super key"], "answer": "Multiple attribute key"},
+    {"question": "Normalization ka main purpose kya hota hai?", "options": ["Redundancy kam karna", "Consistency badhana", "Data ko organize karna", "Ye sabhi"], "answer": "Ye sabhi"},
+    {"question": "First Normal Form (1NF) kya demand karta hai?", "options": ["No multi-valued attributes", "No partial dependency", "No transitive dependency", "No redundancy"], "answer": "No multi-valued attributes"},
+    {"question": "Second Normal Form (2NF) me kya condition hoti hai?", "options": ["Table 1NF me hona chahiye aur partial dependency na ho", "No redundancy", "No transitive dependency", "No super key"], "answer": "Table 1NF me hona chahiye aur partial dependency na ho"},
+    {"question": "Third Normal Form (3NF) kis dependency ko hataata hai?", "options": ["Partial dependency", "Transitive dependency", "Multi-valued dependency", "Redundancy"], "answer": "Transitive dependency"},
+    {"question": "BCNF ka full form kya hai?", "options": ["Boyce Codd Normal Form", "Basic Code Normal Form", "Binary Code Normal Form", "Business Codd Normal Form"], "answer": "Boyce Codd Normal Form"},
+    {"question": "SQL ka full form kya hai?", "options": ["Structured Query Language", "Standard Query Language", "Simple Query Language", "Sequential Query Language"], "answer": "Structured Query Language"},
+    {"question": "DDL ka full form kya hai?", "options": ["Data Definition Language", "Data Description Language", "Data Derivation Language", "Database Definition Language"], "answer": "Data Definition Language"},
+    {"question": "DML ka full form kya hai?", "options": ["Data Manipulation Language", "Data Modification Language", "Database Management Language", "Data Migration Language"], "answer": "Data Manipulation Language"},
+    {"question": "TCL ka full form kya hai?", "options": ["Transaction Control Language", "Table Control Language", "Technical Control Language", "Temporary Control Language"], "answer": "Transaction Control Language"},
+    {"question": "Jo SQL command table ka structure banata hai, wo kaun sa hai?", "options": ["INSERT", "CREATE", "DELETE", "UPDATE"], "answer": "CREATE"},
+    {"question": "Kaunsa SQL statement data insert karta hai?", "options": ["INSERT INTO", "UPDATE", "ALTER", "SELECT"], "answer": "INSERT INTO"},
+    {"question": "Kaunsa SQL command data fetch karne ke liye use hota hai?", "options": ["FETCH", "SELECT", "GET", "DISPLAY"], "answer": "SELECT"},
+    {"question": "Kaunsa SQL command data delete karta hai?", "options": ["REMOVE", "DELETE", "DROP", "ERASE"], "answer": "DELETE"},
+    {"question": "Kaunsa SQL clause filtering ke liye use hota hai?", "options": ["WHERE", "GROUP BY", "ORDER BY", "HAVING"], "answer": "WHERE"},
+    {"question": "Kaunsa SQL clause sorting ke liye use hota hai?", "options": ["SORT BY", "ORDER BY", "GROUP BY", "RANK BY"], "answer": "ORDER BY"},
+    {"question": "Aggregate function COUNT() ka use kya hai?", "options": ["Total rows count karna", "Null values count karna", "Duplicate count karna", "Columns count karna"], "answer": "Total rows count karna"},
+    {"question": "MAX() function kya return karta hai?", "options": ["Minimum value", "Maximum value", "Average value", "Sum of values"], "answer": "Maximum value"},
+    {"question": "AVG() function kya calculate karta hai?", "options": ["Average", "Maximum", "Sum", "Count"], "answer": "Average"},
+    {"question": "SUM() function ka use kis liye hota hai?", "options": ["Values add karne ke liye", "Values ko count karne ke liye", "Values ko sort karne ke liye", "Values ko multiply karne ke liye"], "answer": "Values add karne ke liye"},
+    {"question": "Jo SQL keyword duplicate ko hataata hai, wo kaunsa hai?", "options": ["UNIQUE", "DISTINCT", "ONLY", "FILTER"], "answer": "DISTINCT"},
+    {"question": "Jo SQL clause group ke saath condition lagata hai, wo kaunsa hai?", "options": ["HAVING", "WHERE", "GROUP BY", "ORDER BY"], "answer": "HAVING"},
+    {"question": "Index ka kaam kya hota hai?", "options": ["Search ko fast karna", "Duplicate entries banani", "Memory kam karna", "Backup lena"], "answer": "Search ko fast karna"},
+    {"question": "Trigger ka kaam kya hota hai?", "options": ["Automatically action perform karna", "Backup karna", "Index create karna", "Constraint lagana"], "answer": "Automatically action perform karna"},
+    {"question": "Transaction ke 4 properties ko kya kaha jata hai?", "options": ["ACID", "BASE", "FAST", "DATA"], "answer": "ACID"},
+    {"question": "ACID me 'A' ka matlab kya hai?", "options": ["Atomicity", "Accuracy", "Access", "Association"], "answer": "Atomicity"},
+    {"question": "ACID me 'C' ka matlab kya hai?", "options": ["Consistency", "Concurrency", "Connection", "Correction"], "answer": "Consistency"},
+    {"question": "ACID me 'I' ka matlab kya hai?", "options": ["Isolation", "Indexing", "Integrity", "Iteration"], "answer": "Isolation"},
+    {"question": "ACID me 'D' ka matlab kya hai?", "options": ["Durability", "Dependency", "Data", "Derivation"], "answer": "Durability"},
+    {"question": "Deadlock kab hota hai?", "options": ["Jab 2 transactions ek dusre ka resource hold karte hai", "Jab database corrupt ho jaye", "Jab table lock ho", "Jab server down ho"], "answer": "Jab 2 transactions ek dusre ka resource hold karte hai"},
+    {"question": "Jo key redundancy ko avoid karti hai, wo kaunsi hai?", "options": ["Foreign key", "Primary key", "Candidate key", "Composite key"], "answer": "Primary key"},
+    {"question": "DBMS me data ko logical aur physical level me separate karne ko kya kaha jata hai?", "options": ["Data Abstraction", "Data Independence", "Data Redundancy", "Data Migration"], "answer": "Data Independence"},
+    {"question": "Data Redundancy ka matlab kya hai?", "options": ["Ek hi data ka multiple jagah pe hona", "Data ka missing hona", "Data ka delete hona", "Data ka corrupt hona"], "answer": "Ek hi data ka multiple jagah pe hona"},
+    {"question": "ER Diagram ka full form kya hai?", "options": ["Entity Relationship Diagram", "Entity Relational Data", "Extended Relationship Diagram", "Entity Resource Diagram"], "answer": "Entity Relationship Diagram"},
+    {"question": "Entity Relationship Diagram me relationship ko kis shape se dikhaya jata hai?", "options": ["Rectangle", "Diamond", "Ellipse", "Triangle"], "answer": "Diamond"},
+    {"question": "Entity ko kis shape me dikhate hai ER diagram me?", "options": ["Ellipse", "Rectangle", "Diamond", "Circle"], "answer": "Rectangle"},
+    {"question": "Attribute ko kis shape se dikhate hai ER diagram me?", "options": ["Ellipse", "Rectangle", "Diamond", "Square"], "answer": "Ellipse"},
+    {"question": "Multivalued attribute ko kis shape me dikhate hai?", "options": ["Double Ellipse", "Rectangle", "Dashed Ellipse", "Diamond"], "answer": "Double Ellipse"},
+    {"question": "Weak entity ko kaise represent karte hai?", "options": ["Double rectangle", "Dashed rectangle", "Ellipse", "Circle"], "answer": "Double rectangle"},
+    {"question": "Primary key ko underline se dikhaya jata hai?", "options": ["Yes", "No"], "answer": "Yes"},
+]
+
+]
+
+]
+
+]
+
+
+]
+
+
+  
+
+
+
+
+
+
+
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      document.getElementById("question").textContent = q.question;
+
+      const optionsList = document.getElementById("options");
+      optionsList.innerHTML = "";
+
+      q.options.forEach(option => {
+        const li = document.createElement("li");
+        li.textContent = option;
+        li.onclick = () => checkAnswer(option);
+        optionsList.appendChild(li);
+      });
+
+      document.getElementById("result").textContent = "";
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[currentQuestion].answer;
+      if (selected === correct) {
+        score++;
+        document.getElementById("result").textContent = "✅ Correct!";
+      } else {
+        document.getElementById("result").textContent = `❌ Wrong! Correct: ${correct}`;
+      }
+
+      const items = document.querySelectorAll("#options li");
+      items.forEach(item => item.onclick = null); // Disable after selection
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quiz-box").innerHTML =
+          `<h2>🎉 Quiz Finished!</h2>
+           <p>Your Score: ${score} / ${quizData.length}</p>`;
+      }
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+
+    window.onload = loadQuestion;
+  </script>
+</body>
+</html>
